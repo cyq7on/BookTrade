@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/login_bg" >
+
+    <include layout="@layout/include_navi"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/input_bg"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_title"
+            android:background="@color/transparent"
+            android:drawablePadding="25dip"
+            android:hint="@string/upload_plan"
+            android:paddingLeft="15dip"
+            android:shadowDx="0.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColorHint="#ffdddddd" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@mipmap/base_horization_line" />
+
+
+        <EditText
+            android:id="@+id/et_breakfast"
+            android:minHeight="@dimen/height_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:drawablePadding="25dip"
+            android:hint="@string/upload_breakfast"
+            android:paddingLeft="15dip"
+            android:shadowDx="0.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColorHint="#ffdddddd" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@mipmap/base_horization_line" />
+        <EditText
+            android:id="@+id/et_launch"
+            android:minHeight="@dimen/height_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:drawablePadding="25dip"
+            android:hint="@string/upload_launch"
+            android:paddingLeft="15dip"
+            android:shadowDx="0.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColorHint="#ffdddddd" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@mipmap/base_horization_line" />
+
+        <EditText
+            android:id="@+id/et_dinner"
+            android:minHeight="@dimen/height_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:drawablePadding="25dip"
+            android:hint="@string/upload_dinner"
+            android:paddingLeft="15dip"
+            android:shadowDx="0.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColorHint="#ffdddddd" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@mipmap/base_horization_line" />
+
+        <TextView
+            android:id="@+id/et_nutrient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_title"
+            android:background="@color/transparent"
+            android:hint="@string/upload_nutrient"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dip"
+            android:paddingRight="15dip"
+            android:singleLine="true"
+            android:maxEms="5"
+            android:ellipsize="end"
+            android:drawableRight="@mipmap/register_bottom_arrow"
+            android:textColorHint="#ffdddddd" />
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_title"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@drawable/btn_login_selector"
+        android:gravity="center"
+        android:text="@string/upload"
+        android:textColor="@color/base_color_text_white"
+        android:textSize="@dimen/text_size_large" />
+
+</LinearLayout>
