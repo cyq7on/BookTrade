@@ -10,6 +10,7 @@
     <string name="action_7">午餐</string>
     <string name="action_8">晚餐</string>
     <string name="login_username_hint">请输入用户名&#8230;</string>
+    <string name="login_school_hint">请输入学校&#8230;</string>
     <string name="login_password_hint">请输入密码&#8230;</string>
     <string name="login_email_hint">请再次输入密码&#8230;</string>
     <string name="login">登录</string>

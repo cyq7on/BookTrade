@@ -8,6 +8,7 @@ import android.widget.EditText;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.ParentWithNaviActivity;
@@ -35,6 +36,8 @@ public class RegisterActivity extends ParentWithNaviActivity {
 
     @Bind(R.id.et_password_again)
     EditText et_password_again;
+    @Bind(R.id.et_school)
+    EditText etSchool;
 
     @Override
     protected String title() {
@@ -45,6 +48,7 @@ public class RegisterActivity extends ParentWithNaviActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
         initNaviView();
     }
 
@@ -55,7 +59,8 @@ public class RegisterActivity extends ParentWithNaviActivity {
      */
     @OnClick(R.id.btn_register)
     public void onRegisterClick(View view) {
-        UserModel.getInstance().register(et_username.getText().toString(), et_password.getText().toString(), et_password_again.getText().toString(), new LogInListener() {
+        UserModel.getInstance().register(et_username.getText().toString(),etSchool.getText().toString(),
+                et_password.getText().toString(), et_password_again.getText().toString(), new LogInListener() {
             @Override
             public void done(Object o, BmobException e) {
                 if (e == null) {
