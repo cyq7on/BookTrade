@@ -23,42 +23,37 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
+import cn.bmob.imdemo.adapter.CategoryAdapter;
 import cn.bmob.imdemo.base.ParentWithNaviActivity;
-import cn.bmob.imdemo.bean.CookBook;
+import cn.bmob.imdemo.bean.Book;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
-public class UploadCookBookActivity extends ParentWithNaviActivity {
+public class UploadBookActivity extends ParentWithNaviActivity {
 
     private static final int REQUEST_CODE = 0x1001;
-    private CookBook cookBook = new CookBook();
     @Bind(R.id.et_name)
     EditText etName;
-    @Bind(R.id.et_step)
-    EditText etStep;
+    @Bind(R.id.et_info)
+    EditText etInfo;
     @Bind(R.id.et_image)
     TextView etImage;
-    @Bind(R.id.et_nutrient)
-    TextView etNutrient;
-    @Bind(R.id.tv_category1)
-    TextView tvCategory1;
-    @Bind(R.id.tv_category2)
-    TextView tvCategory2;
-    @Bind(R.id.image)
-    ImageView image;
+    @Bind(R.id.tv_category)
+    TextView tvCategory;
     @Bind(R.id.btn_upload)
     Button btnUpload;
-    private String[] items = {"能量", "蛋白质", "维生素A", "维生素B", "维生素C", "维生素D", "维生素E", "钙铁锌硒"};
-    private String[] category1 = {"鲁菜", "川菜", "粤菜", "淮扬菜"};
-    private String[] category2 = {"淮扬菜", "午餐", "晚餐"};
+    @Bind(R.id.image)
+    ImageView image;
+    private Book book = new Book();
+
     private BmobFile bmobFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_cook_book);
+        setContentView(R.layout.activity_upload_book);
         ButterKnife.bind(this);
         initNaviView();
         etImage.setOnClickListener(new View.OnClickListener() {
@@ -67,68 +62,40 @@ public class UploadCookBookActivity extends ParentWithNaviActivity {
                 selectPhoto();
             }
         });
-        if (user.role == 1) {
-            etNutrient.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDialog();
-                }
-            });
-        } else {
-            etNutrient.setVisibility(View.GONE);
-        }
 
-        tvCategory1.setOnClickListener(new View.OnClickListener() {
+        tvCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog dialog = new AlertDialog.Builder(UploadCookBookActivity.this)
-                        .setTitle("菜系")
-                        .setItems(category1, new DialogInterface.OnClickListener() {
+                AlertDialog dialog = new AlertDialog.Builder(UploadBookActivity.this)
+                        .setTitle("图书分类")
+                        .setItems(CategoryAdapter.category, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                tvCategory1.setText(category1[i]);
+                                tvCategory.setText(CategoryAdapter.category[i]);
+                                book.categoryId = i;
                             }
                         }).create();
                 dialog.show();
             }
         });
 
-        tvCategory2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog dialog = new AlertDialog.Builder(UploadCookBookActivity.this)
-                        .setTitle("类型")
-                        .setItems(category2, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                tvCategory2.setText(category2[i]);
-                            }
-                        }).create();
-                dialog.show();
-            }
-        });
 
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String name = etName.getText().toString();
-                final String step = etStep.getText().toString();
-                final String category1 = tvCategory1.getText().toString();
-                final String category2 = tvCategory2.getText().toString();
+                final String info = etInfo.getText().toString();
+                final String category = tvCategory.getText().toString();
                 if (TextUtils.isEmpty(name)) {
-                    toast("请填写菜名");
+                    toast("请填写书名");
                     return;
                 }
-                if (TextUtils.isEmpty(step)) {
-                    toast("请填写步骤");
+                if (TextUtils.isEmpty(info)) {
+                    toast("请填写图书简介");
                     return;
                 }
-                if (TextUtils.isEmpty(category1)) {
-                    toast("请选择菜系");
-                    return;
-                }
-                if (TextUtils.isEmpty(category2)) {
-                    toast("请选择类型");
+                if (TextUtils.isEmpty(category)) {
+                    toast("请选择图书分类");
                     return;
                 }
                 if (bmobFile == null) {
@@ -140,12 +107,12 @@ public class UploadCookBookActivity extends ParentWithNaviActivity {
                     public void done(BmobException e) {
                         if (e == null) {
                             Logger.d(bmobFile.getFileUrl());
-                            cookBook.imageUrl = bmobFile.getFileUrl();
-                            cookBook.createUserId = user.getObjectId();
-                            cookBook.step = step;
-                            cookBook.name = name;
-                            cookBook.category = category1 + "/" +category2;
-                            cookBook.save(new SaveListener<String>() {
+                            book.imageUrl = bmobFile.getFileUrl();
+                            book.createUserId = user.getObjectId();
+                            book.name = name;
+                            book.info = info;
+                            book.category = category;
+                            book.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
                                     if (e == null) {
@@ -168,48 +135,10 @@ public class UploadCookBookActivity extends ParentWithNaviActivity {
         });
     }
 
-    private void showDialog() {
-        cookBook.nutrientList.clear();
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("营养成分")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        cookBook.nutrientList.clear();
-                    }
-                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int j = 0; j < cookBook.nutrientList.size(); j++) {
-                            stringBuilder.append(cookBook.nutrientList.get(j)).append("\t");
-                            //textView 设置省略号无效
-                            if (j > 3) {
-                                stringBuilder.append("...");
-                                break;
-                            }
-                        }
-                        etNutrient.setText(stringBuilder);
-
-                    }
-                })
-                .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        Logger.d(which + "\n" + isChecked);
-                        if (isChecked) {
-                            cookBook.nutrientList.add(items[which]);
-                        } else {
-                            cookBook.nutrientList.remove(items[which]);
-                        }
-                    }
-                }).create();
-        dialog.show();
-    }
 
     @Override
     protected String title() {
-        return "上传菜单";
+        return "上传图书";
     }
 
     private void selectPhoto() {

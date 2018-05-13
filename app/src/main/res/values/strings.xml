@@ -54,9 +54,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_info">UserInfoActivity</string>
 
-    <string name="upload_name">请填写菜名</string>
-    <string name="upload_step">请填写做菜步骤</string>
+    <string name="upload_name">请填写书名</string>
+    <string name="upload_info">请填写图书简介</string>
     <string name="upload_nutrient">请选择营养成分</string>
+    <string name="upload_category">请选择分类</string>
     <string name="upload_category1">请选择菜系</string>
     <string name="upload_category2">请选择种类</string>
     <string name="upload_image">请选择图片</string>

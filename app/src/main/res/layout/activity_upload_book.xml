@@ -32,25 +32,26 @@
                 android:shadowRadius="1.0"
                 android:textColorHint="#ffdddddd" />
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@mipmap/base_horization_line" />
 
-
             <EditText
-                android:id="@+id/et_step"
+                android:id="@+id/et_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/height_title"
                 android:background="@color/transparent"
                 android:drawablePadding="25dip"
-                android:hint="@string/upload_step"
-                android:minHeight="100dp"
+                android:hint="@string/upload_info"
                 android:paddingLeft="15dip"
                 android:shadowDx="0.0"
                 android:shadowDy="1.0"
                 android:shadowRadius="1.0"
                 android:textColorHint="#ffdddddd" />
+
 
             <View
                 android:layout_width="match_parent"
@@ -74,41 +75,15 @@
                 android:layout_height="0.5dp"
                 android:background="@mipmap/base_horization_line" />
 
-            <TextView
-                android:id="@+id/et_nutrient"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title"
-                android:background="@color/transparent"
-                android:drawableRight="@mipmap/register_bottom_arrow"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:hint="@string/upload_nutrient"
-                android:maxEms="5"
-                android:paddingLeft="15dip"
-                android:paddingRight="15dip"
-                android:singleLine="true"
-                android:textColorHint="#ffdddddd" />
 
             <TextView
-                android:id="@+id/tv_category1"
+                android:id="@+id/tv_category"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_title"
                 android:background="@color/transparent"
                 android:drawableRight="@mipmap/register_bottom_arrow"
                 android:gravity="center_vertical"
-                android:hint="@string/upload_category1"
-                android:paddingLeft="15dip"
-                android:paddingRight="15dip"
-                android:textColorHint="#ffdddddd" />
-
-            <TextView
-                android:id="@+id/tv_category2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_title"
-                android:background="@color/transparent"
-                android:drawableRight="@mipmap/register_bottom_arrow"
-                android:gravity="center_vertical"
-                android:hint="@string/upload_category2"
+                android:hint="@string/upload_category"
                 android:paddingLeft="15dip"
                 android:paddingRight="15dip"
                 android:textColorHint="#ffdddddd" />

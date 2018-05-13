@@ -22,7 +22,7 @@ import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
-import cn.bmob.imdemo.ui.UploadCookBookActivity;
+import cn.bmob.imdemo.ui.UploadBookActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -63,7 +63,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
 
             @Override
             public void clickRight() {
-                startActivity(UploadCookBookActivity.class,null);
+                startActivity(UploadBookActivity.class,null);
             }
         };
     }

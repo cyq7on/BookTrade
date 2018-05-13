@@ -32,7 +32,6 @@ import cn.bmob.imdemo.event.RefreshEvent;
 import cn.bmob.imdemo.model.UserModel;
 import cn.bmob.imdemo.ui.ChatActivity;
 import cn.bmob.imdemo.ui.NewFriendActivity;
-import cn.bmob.imdemo.ui.UploadCookBookActivity;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMUserInfo;
@@ -76,7 +75,6 @@ public class ContactFragment extends ParentWithNaviFragment {
 
             @Override
             public void clickRight() {
-                startActivity(UploadCookBookActivity.class, null);
             }
         };
     }
