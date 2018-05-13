@@ -17,6 +17,27 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/btn_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/tab_home_btn"
+                android:gravity="center"
+                android:onClick="onTabSelect"
+                android:paddingBottom="2dip"
+                android:paddingTop="7dip"
+                android:scaleType="matrix"
+                android:text="@string/main_tab_recent"
+                android:textColor="@drawable/tab_textcolor"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
                 android:id="@+id/btn_conversation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -52,16 +73,16 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/btn_contact"
+                android:id="@+id/btn_cart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/tab_contact_btn"
+                android:drawableTop="@drawable/tab_cart_btn"
                 android:gravity="center"
                 android:onClick="onTabSelect"
                 android:paddingBottom="2dip"
                 android:paddingTop="7dip"
                 android:scaleType="matrix"
-                android:text="@string/main_tab_contact"
+                android:text="@string/main_tab_cart"
                 android:textColor="@drawable/tab_textcolor"
                 android:textSize="12sp"/>
 
@@ -93,7 +114,7 @@
             android:paddingBottom="2dip"
             android:paddingTop="7dip"
             android:scaleType="matrix"
-            android:text="@string/mian_tab_set"
+            android:text="@string/main_tab_set"
             android:textColor="@drawable/tab_textcolor"
             android:textSize="12sp"/>
     </LinearLayout>
