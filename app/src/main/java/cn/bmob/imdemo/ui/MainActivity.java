@@ -20,7 +20,8 @@ import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.db.NewFriendManager;
 import cn.bmob.imdemo.event.RefreshEvent;
-import cn.bmob.imdemo.ui.fragment.PersonalFragment;
+import cn.bmob.imdemo.ui.fragment.CollectFragment;
+import cn.bmob.imdemo.ui.fragment.ConversationFragment;
 import cn.bmob.imdemo.ui.fragment.RecommendFragment;
 import cn.bmob.imdemo.ui.fragment.SetFragment;
 import cn.bmob.imdemo.util.IMMLeaks;
@@ -48,6 +49,8 @@ public class MainActivity extends BaseActivity {
     TextView btn_set;
     @Bind(R.id.btn_cart)
     TextView btn_contact;
+    @Bind(R.id.btn_home)
+    TextView btn_home;
 
     @Bind(R.id.iv_conversation_tips)
     ImageView iv_conversation_tips;
@@ -55,7 +58,7 @@ public class MainActivity extends BaseActivity {
     ImageView iv_contact_tips;
 
     private TextView[] mTabs;
-    private ParentWithNaviFragment recommendFragment, personalFragment;
+    private ParentWithNaviFragment homeFragment, conversationFragment, cartFragment;
     private SetFragment setFragment;
     private Fragment[] fragments;
     private int index;
@@ -103,37 +106,43 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
-        mTabs = new TextView[3];
-        mTabs[0] = btn_conversation;
-        mTabs[1] = btn_contact;
-        mTabs[2] = btn_set;
+        mTabs = new TextView[4];
+        mTabs[0] = btn_home;
+        mTabs[1] = btn_conversation;
+        mTabs[2] = btn_contact;
+        mTabs[3] = btn_set;
         mTabs[0].setSelected(true);
         initTab();
     }
 
     private void initTab() {
-        recommendFragment = new RecommendFragment();
+        homeFragment = new RecommendFragment();
+        conversationFragment = new ConversationFragment();
+        cartFragment = new CollectFragment();
         setFragment = new SetFragment();
-        personalFragment = new PersonalFragment();
-        fragments = new Fragment[]{recommendFragment, personalFragment, setFragment};
+        fragments = new Fragment[]{homeFragment, conversationFragment, cartFragment, setFragment};
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, recommendFragment).
-                add(R.id.fragment_container, personalFragment)
+                .add(R.id.fragment_container, homeFragment)
+                .add(R.id.fragment_container, conversationFragment)
+                .add(R.id.fragment_container, cartFragment)
                 .add(R.id.fragment_container, setFragment)
-                .hide(setFragment).hide(personalFragment)
-                .show(recommendFragment).commit();
+                .hide(setFragment).hide(conversationFragment).hide(cartFragment)
+                .show(homeFragment).commit();
     }
 
     public void onTabSelect(View view) {
         switch (view.getId()) {
-            case R.id.btn_conversation:
+            case R.id.btn_home:
                 index = 0;
                 break;
-            case R.id.btn_cart:
+            case R.id.btn_conversation:
                 index = 1;
                 break;
-            case R.id.btn_set:
+            case R.id.btn_cart:
                 index = 2;
+                break;
+            case R.id.btn_set:
+                index = 3;
                 break;
             default:
                 break;

@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.PopupMenu;
 
 import com.orhanobut.logger.Logger;
@@ -21,14 +19,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CookBookAdapter;
 import cn.bmob.imdemo.adapter.base.IMutlipleItem;
 import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.CookBook;
-import cn.bmob.imdemo.util.BMIUtils;
 import cn.bmob.imdemo.util.SPUtil;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -40,12 +36,6 @@ public class RecommendFragment extends ParentWithNaviFragment {
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout swRefresh;
     protected CookBookAdapter adapter;
-    @Bind(R.id.weight)
-    EditText weight;
-    @Bind(R.id.height)
-    EditText height;
-    @Bind(R.id.btn_generate)
-    Button btnGenerate;
     private String category = "全部";
     private PopupMenu popup;
     public static final String STATUS_INT = "status_int";
@@ -231,20 +221,5 @@ public class RecommendFragment extends ParentWithNaviFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    @OnClick(R.id.btn_generate)
-    public void onViewClicked() {
-        String weight = this.weight.getText().toString();
-        String height = this.height.getText().toString();
-        if(TextUtils.isEmpty(weight) || TextUtils.isEmpty(height)){
-            toast("请输入完整信息");
-            return;
-        }
-        BMIUtils utils = new BMIUtils(Double.parseDouble(weight),Double.parseDouble(height));
-        toast(utils.getStatus());
-        int statusInt = utils.getStatusInt();
-        SPUtil.putAndApply(getContext(),STATUS_INT,statusInt);
-        query("全部");
     }
 }
