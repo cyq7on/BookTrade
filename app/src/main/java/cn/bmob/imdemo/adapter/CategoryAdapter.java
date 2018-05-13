@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.bmob.imdemo.R;
+import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
 
@@ -64,8 +65,10 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         if (arg3 == null) {
             childrenView = new HolderView();
             // 获取子视图的布局文件
-            arg3 = mInflater.inflate(R.layout.item_contact, arg4, false);
-            childrenView.titleView = (TextView) arg3.findViewById(R.id.tv_recent_name);
+            arg3 = mInflater.inflate(R.layout.item_child, arg4, false);
+            childrenView.titleView = (TextView) arg3.findViewById(R.id.tv_name);
+            childrenView.tvInfo = (TextView) arg3.findViewById(R.id.tv_info);
+            childrenView.ivBook = (ImageView) arg3.findViewById(R.id.iv_book);
             // 这个函数是用来将holderview设置标签,相当于缓存在view当中
             arg3.setTag(childrenView);
         } else {
@@ -76,13 +79,18 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
          * 设置相应控件的内容
          */
         // 设置标题上的文本信息
-        childrenView.titleView.setText(data_list.get(arg0).getList().get(arg1).name);
+        childrenView.titleView.setText(getChild(arg0,arg1).name);
+        childrenView.tvInfo.setText(getChild(arg0,arg1).info);
+        ImageLoaderFactory.getLoader().loadAvator(childrenView.ivBook,getChild(arg0,arg1).imageUrl,
+                R.mipmap.ic_launcher);
         return arg3;
     }
 
     // 保存二级列表的视图类
     private class HolderView {
         TextView titleView;
+        TextView tvInfo;
+        ImageView ivBook;
     }
 
     // 获取二级列表的数量

@@ -71,6 +71,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createData();
         adapter = new CategoryAdapter(getActivity(),list);
     }
 
@@ -80,7 +81,12 @@ public class CategoryFragment extends ParentWithNaviFragment {
         rootView = inflater.inflate(R.layout.fragment_category, container, false);
         ButterKnife.bind(this, rootView);
         initNaviView();
-        createData();
+        swRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swRefresh.setRefreshing(true);
+            }
+        });
         expandList.setAdapter(adapter);
         expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -105,13 +111,20 @@ public class CategoryFragment extends ParentWithNaviFragment {
         swRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                createData();
+                query(null);
             }
         });
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        query(null);
+    }
+
     private void query(String keyWord) {
+//        swRefresh.setRefreshing(true);
         BmobQuery<Book> query = new BmobQuery<>();
         query.order("-updatedAt");
         //免费版不支持模糊查询
@@ -122,6 +135,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
                 public void done(List<Book> books, BmobException e) {
                     swRefresh.setRefreshing(false);
                     if(e == null){
+                        clearData();
                         for (Book book : books) {
                             list.get(book.categoryId).getList().add(book);
                         }
@@ -138,6 +152,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
                 public void done(List<Book> books, BmobException e) {
                     swRefresh.setRefreshing(false);
                     if(e == null){
+                        clearData();
                         for (Book book : books) {
                             list.get(book.categoryId).getList().add(book);
                         }
@@ -152,15 +167,19 @@ public class CategoryFragment extends ParentWithNaviFragment {
 
     }
 
+    private void clearData() {
+        for (FatherData data : list) {
+            data.getList().clear();
+        }
+    }
+
     private void createData() {
-        swRefresh.setRefreshing(true);
         for (int i = 0; i < CategoryAdapter.category.length; i++) {
             FatherData fatherData = new FatherData();
             fatherData.setList(new ArrayList<Book>());
             fatherData.setTitle(CategoryAdapter.category[i]);
             list.add(fatherData);
         }
-        query(null);
     }
 
     @Override
