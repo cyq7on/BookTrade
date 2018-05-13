@@ -20,9 +20,9 @@ import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.db.NewFriendManager;
 import cn.bmob.imdemo.event.RefreshEvent;
+import cn.bmob.imdemo.ui.fragment.CategoryFragment;
 import cn.bmob.imdemo.ui.fragment.CollectFragment;
 import cn.bmob.imdemo.ui.fragment.ConversationFragment;
-import cn.bmob.imdemo.ui.fragment.RecommendFragment;
 import cn.bmob.imdemo.ui.fragment.SetFragment;
 import cn.bmob.imdemo.util.IMMLeaks;
 import cn.bmob.newim.BmobIM;
@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initTab() {
-        homeFragment = new RecommendFragment();
+        homeFragment = new CategoryFragment();
         conversationFragment = new ConversationFragment();
         cartFragment = new CollectFragment();
         setFragment = new SetFragment();

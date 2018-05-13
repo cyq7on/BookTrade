@@ -18,9 +18,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CategoryAdapter;
+import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
+import cn.bmob.imdemo.ui.UploadCookBookActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -43,7 +45,27 @@ public class CategoryFragment extends ParentWithNaviFragment {
 
     @Override
     protected String title() {
-        return "医生";
+        return "主页";
+    }
+
+    @Override
+    public Object right() {
+        return R.drawable.base_action_bar_add_bg_selector;
+    }
+
+    @Override
+    public ParentWithNaviActivity.ToolBarListener setToolBarListener() {
+        return new ParentWithNaviActivity.ToolBarListener() {
+            @Override
+            public void clickLeft() {
+
+            }
+
+            @Override
+            public void clickRight() {
+                startActivity(UploadCookBookActivity.class,null);
+            }
+        };
     }
 
     @Override
@@ -57,6 +79,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_category, container, false);
         ButterKnife.bind(this, rootView);
+        initNaviView();
         createData();
         expandList.setAdapter(adapter);
         expandList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

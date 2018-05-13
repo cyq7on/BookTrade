@@ -115,11 +115,8 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         HodlerViewFather hodlerViewFather;
         if (arg2 == null) {
             hodlerViewFather = new HodlerViewFather();
-            arg2 = mInflater.inflate(R.layout.item_contact, arg3, false);
-            hodlerViewFather.titlev = (TextView) arg2.findViewById(R.id.tv_recent_name);
-            // 新建一个TextView对象，用来显示一级标签上的大体描述的信息
-            hodlerViewFather.group_state = (ImageView) arg2.findViewById(R.id.iv_recent_avatar);
-            hodlerViewFather.group_state.setVisibility(View.GONE);
+            arg2 = mInflater.inflate(R.layout.item_father, arg3, false);
+            hodlerViewFather.titlev = (TextView) arg2.findViewById(R.id.tv_name);
             arg2.setTag(hodlerViewFather);
         } else {
             hodlerViewFather = (HodlerViewFather) arg2.getTag();
