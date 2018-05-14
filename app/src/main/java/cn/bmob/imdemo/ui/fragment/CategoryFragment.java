@@ -18,10 +18,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CategoryAdapter;
+import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
+import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.ui.UploadBookActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.v3.BmobQuery;
@@ -72,7 +74,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createData();
-        adapter = new CategoryAdapter(getActivity(),list);
+        adapter = new CategoryAdapter((BaseActivity) getActivity(),list);
     }
 
     @Nullable
@@ -93,7 +95,12 @@ public class CategoryFragment extends ParentWithNaviFragment {
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 Bundle bundle = new Bundle();
                 Book book = adapter.getChild(i,i1);
-                bundle.putSerializable("b", book);
+                User user = book.user;
+                if(user.getObjectId().equals(CategoryFragment.this.user.getObjectId())){
+                    toast("这是你自己的书哦");
+                    return false;
+                }
+                bundle.putSerializable("u", user);
                 startActivity(UserInfoActivity.class, bundle);
                 return true;
             }
@@ -127,8 +134,11 @@ public class CategoryFragment extends ParentWithNaviFragment {
 //        swRefresh.setRefreshing(true);
         BmobQuery<Book> query = new BmobQuery<>();
         query.order("-updatedAt");
+        query.include("user");
+        BmobQuery<User> innerQuery = new BmobQuery<>();
         //免费版不支持模糊查询
 //        query.addWhereContains("name",keyWord);
+        query.addWhereMatchesQuery("user", "_User", innerQuery);
         if(TextUtils.isEmpty(keyWord)){
             query.findObjects(new FindListener<Book>() {
                 @Override
