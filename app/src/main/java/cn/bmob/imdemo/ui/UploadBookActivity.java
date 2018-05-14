@@ -108,7 +108,7 @@ public class UploadBookActivity extends ParentWithNaviActivity {
                         if (e == null) {
                             Logger.d(bmobFile.getFileUrl());
                             book.imageUrl = bmobFile.getFileUrl();
-                            book.createUserId = user.getObjectId();
+                            book.user = user;
                             book.name = name;
                             book.info = info;
                             book.category = category;

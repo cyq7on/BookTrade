@@ -17,7 +17,7 @@ public class Book extends BmobObject {
     public String info;
     public String category;
     public int categoryId;
-    public String createUserId;
+    public User user;
     public String imageUrl;
     public BmobRelation collectUsers = new BmobRelation();
     public List<User> collectList = new ArrayList<>();
@@ -28,7 +28,7 @@ public class Book extends BmobObject {
                 "name='" + name + '\'' +
                 ", category='" + category + '\'' +
                 ", categoryId='" + categoryId + '\'' +
-                ", createUserId='" + createUserId + '\'' +
+                ", user='" + user.getUsername() + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", collectUsers=" + collectUsers +
                 '}';
