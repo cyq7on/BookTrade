@@ -46,6 +46,8 @@ public class UploadBookActivity extends ParentWithNaviActivity {
     Button btnUpload;
     @Bind(R.id.image)
     ImageView image;
+    @Bind(R.id.et_price)
+    EditText etPrice;
     private Book book = new Book();
 
     private BmobFile bmobFile;
@@ -86,12 +88,17 @@ public class UploadBookActivity extends ParentWithNaviActivity {
                 final String name = etName.getText().toString();
                 final String info = etInfo.getText().toString();
                 final String category = tvCategory.getText().toString();
+                final String price = etPrice.getText().toString();
                 if (TextUtils.isEmpty(name)) {
                     toast("请填写书名");
                     return;
                 }
                 if (TextUtils.isEmpty(info)) {
                     toast("请填写图书简介");
+                    return;
+                }
+                if (TextUtils.isEmpty(price)) {
+                    toast("请填写图书价格");
                     return;
                 }
                 if (TextUtils.isEmpty(category)) {
@@ -111,6 +118,7 @@ public class UploadBookActivity extends ParentWithNaviActivity {
                             book.user = user;
                             book.name = name;
                             book.info = info;
+                            book.price = price;
                             book.category = category;
                             book.save(new SaveListener<String>() {
                                 @Override

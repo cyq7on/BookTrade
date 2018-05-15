@@ -57,6 +57,7 @@
 
     <string name="upload_name">请填写书名</string>
     <string name="upload_info">请填写图书简介</string>
+    <string name="upload_price">请填写图书价格</string>
     <string name="upload_nutrient">请选择营养成分</string>
     <string name="upload_category">请选择分类</string>
     <string name="upload_category1">请选择菜系</string>

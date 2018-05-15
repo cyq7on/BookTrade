@@ -52,6 +52,26 @@
                 android:shadowRadius="1.0"
                 android:textColorHint="#ffdddddd" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@mipmap/base_horization_line" />
+
+            <EditText
+                android:id="@+id/et_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/height_title"
+                android:background="@color/transparent"
+                android:drawablePadding="25dip"
+                android:hint="@string/upload_price"
+                android:inputType="numberDecimal"
+                android:paddingLeft="15dip"
+                android:shadowDx="0.0"
+                android:shadowDy="1.0"
+                android:shadowRadius="1.0"
+                android:textColorHint="#ffdddddd" />
+
 
             <View
                 android:layout_width="match_parent"

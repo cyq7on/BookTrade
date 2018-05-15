@@ -63,6 +63,16 @@
             android:layout_toRightOf="@id/ivChat"
             android:layout_marginLeft="@dimen/margin_30"
             android:src="@mipmap/cart_press" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:textColor="@color/color_theme"
+            android:textSize="@dimen/text_size_large"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_15"/>
     </RelativeLayout>
 
 

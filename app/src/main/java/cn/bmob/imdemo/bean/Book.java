@@ -15,6 +15,7 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class Book extends BmobObject {
     public String name;
     public String info;
+    public String price;
     public String category;
     public int categoryId;
     public User user;
@@ -27,6 +28,7 @@ public class Book extends BmobObject {
         return "Book{" +
                 "name='" + name + '\'' +
                 ", category='" + category + '\'' +
+                ", price='" + price + '\'' +
                 ", categoryId='" + categoryId + '\'' +
                 ", user='" + user.getUsername() + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

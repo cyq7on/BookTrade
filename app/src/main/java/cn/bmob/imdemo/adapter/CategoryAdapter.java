@@ -77,6 +77,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
             arg3 = mInflater.inflate(R.layout.item_child, arg4, false);
             childrenView.titleView = (TextView) arg3.findViewById(R.id.tv_name);
             childrenView.tvInfo = (TextView) arg3.findViewById(R.id.tv_info);
+            childrenView.tvPrice = (TextView) arg3.findViewById(R.id.tvPrice);
             childrenView.ivBook = (ImageView) arg3.findViewById(R.id.iv_book);
             childrenView.ivChat = (ImageView) arg3.findViewById(R.id.ivChat);
             childrenView.ivCart = (ImageView) arg3.findViewById(R.id.ivCart);
@@ -89,15 +90,17 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         /**
          * 设置相应控件的内容
          */
+        final Book book = getChild(arg0,arg1);
         // 设置标题上的文本信息
-        childrenView.titleView.setText(getChild(arg0,arg1).name);
-        childrenView.tvInfo.setText(getChild(arg0,arg1).info);
-        ImageLoaderFactory.getLoader().loadAvator(childrenView.ivBook,getChild(arg0,arg1).imageUrl,
+        childrenView.titleView.setText(book.name);
+        childrenView.tvInfo.setText(book.info);
+        childrenView.tvPrice.setText(String.format("￥%s",book.price));
+        ImageLoaderFactory.getLoader().loadAvator(childrenView.ivBook,book.imageUrl,
                 R.mipmap.ic_launcher);
         childrenView.ivChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Book book = getChild(arg0,arg1);
+
                 User user = book.user;
                 User currentUser = BmobUser.getCurrentUser(User.class);
                 if(user.getObjectId().equals(currentUser.getObjectId())){
@@ -135,6 +138,7 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
     private class HolderView {
         TextView titleView;
         TextView tvInfo;
+        TextView tvPrice;
         ImageView ivBook;
         ImageView ivChat;
         ImageView ivCart;
