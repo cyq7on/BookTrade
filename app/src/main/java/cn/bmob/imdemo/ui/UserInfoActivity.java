@@ -41,11 +41,12 @@ public class UserInfoActivity extends ParentWithNaviActivity {
     @Bind(R.id.btn_chat)
     Button btn_chat;
 
-
     //用户
     User user;
     //用户信息
     BmobIMUserInfo info;
+    @Bind(R.id.tv_school)
+    TextView tvSchool;
 
     @Override
     protected String title() {
@@ -74,6 +75,7 @@ public class UserInfoActivity extends ParentWithNaviActivity {
         ImageLoaderFactory.getLoader().loadAvator(iv_avator, user.getAvatar(), R.mipmap.head);
         //显示名称
         tv_name.setText(user.getUsername());
+        tvSchool.setText(user.school);
     }
 
 
