@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import cn.bmob.imdemo.base.UniversalImageLoader;
+import cn.bmob.imdemo.util.DBHelper;
 import cn.bmob.newim.BmobIM;
 
 /**
@@ -55,6 +56,7 @@ public class BmobIMApplication extends Application {
                 com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage("file://" + path,imageView);
             }
         });
+        DBHelper.init(getApplicationContext());
     }
 
     /**
