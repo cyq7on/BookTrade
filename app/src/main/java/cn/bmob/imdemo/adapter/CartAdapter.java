@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,6 @@ import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
-import cn.bmob.imdemo.bean.ShoppingCartBean;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.ui.ChatActivity;
 import cn.bmob.imdemo.ui.UIAlertView;
@@ -27,6 +28,8 @@ import cn.bmob.imdemo.util.ShoppingCartBiz;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * * ---------神兽保佑 !---------
@@ -255,6 +258,21 @@ public class CartAdapter extends BaseExpandableListAdapter {
                     int groupPosition2 = Integer.parseInt(String.valueOf(v.getTag()));
                     boolean isEditing = !(mListGoods.get(groupPosition2).isEdit);
                     mListGoods.get(groupPosition2).isEdit = isEditing;
+                    TextView textView = (TextView) v;
+                    if(textView.getText().toString().contains("完成")){
+                        mListGoods.get(groupPosition2).update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if(e != null){
+                                    toast("商品数量更新失败");
+                                    Logger.e(e);
+                                }
+                            }
+                        });
+                    }
+                    for (CartOrOrderBean bean : mListGoods) {
+                        Logger.d(bean.count + "");
+                    }
                     /*for (int i = 0; i < mListGoods.get(groupPosition2).getGoods().size(); i++) {
                         mListGoods.get(groupPosition2).getGoods().get(i).setIsEditing(isEditing);
                     }*/
@@ -290,11 +308,11 @@ public class CartAdapter extends BaseExpandableListAdapter {
                     }
                     break;
                 case R.id.ivAdd:
-                    ShoppingCartBiz.addOrReduceGoodsNum(true, (ShoppingCartBean.Goods) v.getTag(), ((TextView) (((View) (v.getParent())).findViewById(R.id.tvNum2))));
+                    ShoppingCartBiz.addOrReduceGoodsNum(true, (CartOrOrderBean) v.getTag(), ((TextView) (((View) (v.getParent())).findViewById(R.id.tvNum2))));
                     setSettleInfo();
                     break;
                 case R.id.ivReduce:
-                    ShoppingCartBiz.addOrReduceGoodsNum(false, (ShoppingCartBean.Goods) v.getTag(), ((TextView) (((View) (v.getParent())).findViewById(R.id.tvNum2))));
+                    ShoppingCartBiz.addOrReduceGoodsNum(false, (CartOrOrderBean) v.getTag(), ((TextView) (((View) (v.getParent())).findViewById(R.id.tvNum2))));
                     setSettleInfo();
                     break;
                 case R.id.llGoodInfo:
@@ -344,20 +362,29 @@ public class CartAdapter extends BaseExpandableListAdapter {
                                            ShoppingCartBiz.delGood(productID);*/
                                            delGoods(groupPosition, childPosition);
                                            setSettleInfo();
-                                           notifyDataSetChanged();
                                            delDialog.dismiss();
                                        }
                                    }
         );
     }
 
-    private void delGoods(int groupPosition, int childPosition) {
+    private void delGoods(final int groupPosition, int childPosition) {
         /*mListGoods.get(groupPosition).getGoods().remove(childPosition);
         if (mListGoods.get(groupPosition).getGoods().size() == 0) {
             mListGoods.remove(groupPosition);
         }*/
-        mListGoods.remove(groupPosition);
-        notifyDataSetChanged();
+        mListGoods.get(groupPosition).delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e == null){
+                    mListGoods.remove(groupPosition);
+                    notifyDataSetChanged();
+                }else {
+                    Logger.e(e);
+                    toast("删除失败");
+                }
+            }
+        });
     }
 
     class GroupViewHolder {

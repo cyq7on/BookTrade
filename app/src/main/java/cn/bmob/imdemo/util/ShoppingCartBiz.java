@@ -247,7 +247,7 @@ public class ShoppingCartBiz {
     }
 
     /** 增减数量，操作通用，数据不通用 */
-    public static void addOrReduceGoodsNum(boolean isPlus, ShoppingCartBean.Goods goods, TextView tvNum) {
+    /*public static void addOrReduceGoodsNum(boolean isPlus, ShoppingCartBean.Goods goods, TextView tvNum) {
         String currentNum = goods.getNumber().trim();
         String num = "1";
         if (isPlus) {
@@ -264,6 +264,23 @@ public class ShoppingCartBiz {
         tvNum.setText(num);
         goods.setNumber(num);
         updateGoodsNumber(productID, num);
+    }*/
+
+    public static void addOrReduceGoodsNum(boolean isPlus, CartOrOrderBean bean, TextView tvNum) {
+        int currentNum = bean.count;
+        String num ;
+        if (isPlus) {
+            num = String.valueOf(currentNum + 1);
+        } else {
+            int i = currentNum;
+            if (i > 1) {
+                num = String.valueOf(i - 1);
+            } else {
+                num = "1";
+            }
+        }
+        tvNum.setText(num);
+        bean.count = Integer.parseInt(num);
     }
 
     /**
