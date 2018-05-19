@@ -60,9 +60,13 @@ public class CartFragment extends ParentWithNaviFragment {
         return rootView;
     }
 
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            return;
+        }
         query();
     }
 
