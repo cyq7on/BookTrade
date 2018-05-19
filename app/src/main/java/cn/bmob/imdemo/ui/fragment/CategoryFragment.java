@@ -26,7 +26,7 @@ import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
 import cn.bmob.imdemo.bean.User;
-import cn.bmob.imdemo.ui.SearchActivity;
+import cn.bmob.imdemo.ui.SearchBookActivity;
 import cn.bmob.imdemo.ui.UploadBookActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.v3.BmobQuery;
@@ -130,7 +130,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    startActivity(SearchActivity.class,null);
+                    startActivity(SearchBookActivity.class,null);
                     return true;
                 }
                 return false;

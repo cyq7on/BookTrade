@@ -38,12 +38,14 @@ public class CartFragment extends ParentWithNaviFragment {
     TextView btnSettle;
     @Bind(R.id.tvCountMoney)
     TextView tvCountMoney;
-   /* @Bind(R.id.tvTitle)
-    TextView tvTitle;*/
+    /* @Bind(R.id.tvTitle)
+     TextView tvTitle;*/
     @Bind(R.id.rlShoppingCartEmpty)
     RelativeLayout rlShoppingCartEmpty;
-    private List<CartOrOrderBean> mListGoods = new ArrayList<>();
-    private CartAdapter adapter;
+    protected List<CartOrOrderBean> mListGoods = new ArrayList<>();
+    protected CartAdapter adapter;
+    @Bind(R.id.rlBottomBar)
+    RelativeLayout rlBottomBar;
 
     @Override
     protected String title() {
@@ -66,13 +68,13 @@ public class CartFragment extends ParentWithNaviFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden){
+        if (hidden) {
             return;
         }
         query();
     }
 
-    private void setAdapter() {
+    protected void setAdapter() {
         adapter = new CartAdapter((BaseActivity) getActivity());
         expandableListView.setAdapter(adapter);
         adapter.setOnShoppingCartChangeListener(new CartAdapter.OnShoppingCartChangeListener() {
@@ -131,7 +133,7 @@ public class CartFragment extends ParentWithNaviFragment {
     }
 
 
-    private void updateListView() {
+    protected void updateListView() {
         adapter.setList(mListGoods);
         adapter.notifyDataSetChanged();
         expandAllGroup();
@@ -146,7 +148,9 @@ public class CartFragment extends ParentWithNaviFragment {
         }
     }
 
-    /** 测试添加数据 ，添加的动作是通用的，但数据上只是添加ID而已，数据非通用 */
+    /**
+     * 测试添加数据 ，添加的动作是通用的，但数据上只是添加ID而已，数据非通用
+     */
     private void testAddGood() {
         ShoppingCartBiz.addGoodToCart("279457f3-4692-43bf-9676-fa9ab9155c38", "6");
         ShoppingCartBiz.addGoodToCart("95fbe11d-7303-4b9f-8ca4-537d06ce2f8a", "8");
@@ -158,30 +162,36 @@ public class CartFragment extends ParentWithNaviFragment {
         ShoppingCartBiz.addGoodToCart("7d6e52fb-d57c-45ee-8f05-50905138801h", "3");
     }
 
-    private void query() {
+    protected void query() {
         BmobQuery<CartOrOrderBean> query = new BmobQuery<>();
         query.order("-updatedAt");
         query.include("fromUser,toUser,book");
         BmobQuery<User> innerQuery = new BmobQuery<>();
-        innerQuery.addWhereEqualTo("objectId",user.getObjectId());
+        innerQuery.addWhereEqualTo("objectId", user.getObjectId());
         query.addWhereMatchesQuery("toUser", "_User", innerQuery);
         query.findObjects(new FindListener<CartOrOrderBean>() {
             @Override
             public void done(List<CartOrOrderBean> list, BmobException e) {
 //                swRefresh.setRefreshing(false);
-                if(e == null){
-                    if(mListGoods.isEmpty()){
+                if (e == null) {
+                    if (mListGoods.isEmpty()) {
                         mListGoods.addAll(list);
-                    }else {
+                    } else {
                         mListGoods.clear();
                         mListGoods.addAll(list);
                     }
                     updateListView();
-                }else {
+                } else {
                     Logger.e(e);
                     toast("获取信息出错");
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

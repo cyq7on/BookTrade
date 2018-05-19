@@ -41,6 +41,8 @@
     <string name="set_blacklist">黑名单</string>
     <string name="set_voice">声音</string>
     <string name="set_vibrate">震动</string>
+    <string name="set_order_send">已下订单</string>
+    <string name="set_order_receive">已收订单</string>
     <string name="logout">退出登陆</string>
 
     <string name="longclick_speak">长按说话</string>

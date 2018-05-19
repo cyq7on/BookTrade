@@ -25,7 +25,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-public class SearchActivity extends ParentWithNaviActivity {
+public class CheckoutActivity extends ParentWithNaviActivity {
 
     @Bind(R.id.rc_view)
     RecyclerView rcView;

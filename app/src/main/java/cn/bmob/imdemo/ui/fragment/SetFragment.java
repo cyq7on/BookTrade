@@ -16,6 +16,7 @@ import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.model.UserModel;
 import cn.bmob.imdemo.ui.LoginActivity;
+import cn.bmob.imdemo.ui.OrderActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.v3.BmobUser;
@@ -74,5 +75,27 @@ public class SetFragment extends ParentWithNaviFragment {
         BmobIM.getInstance().disConnect();
         getActivity().finish();
         startActivity(LoginActivity.class, null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.rl_send, R.id.rl_receive})
+    public void onViewClicked(View view) {
+        Bundle bundle = new Bundle(2);
+        switch (view.getId()) {
+            case R.id.rl_send:
+                bundle.putString("key","toUser");
+                bundle.putString("title","已下订单");
+                break;
+            case R.id.rl_receive:
+                bundle.putString("key","fromUser");
+                bundle.putString("title","已收订单");
+                break;
+        }
+        startActivity(OrderActivity.class,bundle);
     }
 }
