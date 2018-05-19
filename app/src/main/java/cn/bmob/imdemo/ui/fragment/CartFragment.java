@@ -12,11 +12,6 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +20,6 @@ import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CartAdapter;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
-import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
@@ -62,7 +56,6 @@ public class CartFragment extends ParentWithNaviFragment {
         ButterKnife.bind(this, rootView);
         initNaviView();
         setAdapter();
-        requestShoppingCartList();
         initView();
         return rootView;
     }
@@ -79,7 +72,8 @@ public class CartFragment extends ParentWithNaviFragment {
         adapter.setOnShoppingCartChangeListener(new CartAdapter.OnShoppingCartChangeListener() {
             @Override
             public void onDataChange(String selectCount, String selectMoney) {
-                int goodsCount = ShoppingCartBiz.getGoodsCount();
+//                int goodsCount = ShoppingCartBiz.getGoodsCount();
+                int goodsCount = mListGoods.size();
 //                if (!isNetworkOk) {//网络状态判断暂时不显示
 //                }
                 if (goodsCount == 0) {
@@ -130,59 +124,6 @@ public class CartFragment extends ParentWithNaviFragment {
         });
     }
 
-    /** 获取购物车列表的数据（数据和网络请求也是非通用部分） */
-    private void requestShoppingCartList() {
-        ShoppingCartBiz.delAllGoods();
-//        testAddGood();
-        //使用本地JSON，作测试用。本来应该是将商品ID发送的服务器，服务器返回对应的商品信息；
-        /*ShoppingCartHttpBiz.requestOrderList(this, new VollyHelperNew.ResponseCallBack() {//requestOrderList(list, new VollyHelperNew.ResponseCallBack())
-            @Override
-            public void handleResponse(JSONObject response, int errCode) {
-                mListGoods = ShoppingCartHttpBiz.handleOrderList(response, errCode);
-                ShoppingCartBiz.updateShopList(mListGoods);
-                updateListView();
-            }
-        });*/
-        InputStream is = null;
-        try {
-            is = getContext().getAssets().open("firm_order.json");
-        } catch (IOException e) {
-            Logger.e(e);
-        }
-        String s = readJson(is);
-    }
-
-    //从给定位置读取Json文件
-    private String readJson(InputStream is) {
-        //从给定位置获取文件
-//        File file = new File(path);
-        BufferedReader reader = null;
-        //返回值,使用StringBuffer
-        StringBuffer data = new StringBuffer();
-        //
-        try {
-            reader = new BufferedReader(new InputStreamReader(is));
-            //每次读取文件的缓存
-            String temp = null;
-            while ((temp = reader.readLine()) != null) {
-                data.append(temp);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            //关闭文件流
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return data.toString();
-    }
 
     private void updateListView() {
         adapter.setList(mListGoods);
@@ -212,26 +153,22 @@ public class CartFragment extends ParentWithNaviFragment {
     }
 
     private void query() {
-        BmobQuery<Book> query = new BmobQuery<>();
+        BmobQuery<CartOrOrderBean> query = new BmobQuery<>();
         query.order("-updatedAt");
-        query.include("user");
+        query.include("fromUser,toUser,book");
         BmobQuery<User> innerQuery = new BmobQuery<>();
-        //免费版不支持模糊查询
-//        query.addWhereContains("name",keyWord);
-        query.addWhereMatchesQuery("user", "_User", innerQuery);
-        query.findObjects(new FindListener<Book>() {
+        innerQuery.addWhereEqualTo("objectId",user.getObjectId());
+        query.addWhereMatchesQuery("toUser", "_User", innerQuery);
+        query.findObjects(new FindListener<CartOrOrderBean>() {
             @Override
-            public void done(List<Book> books, BmobException e) {
+            public void done(List<CartOrOrderBean> list, BmobException e) {
 //                swRefresh.setRefreshing(false);
                 if(e == null){
-//                    clearData();
-                    for (Book book : books) {
-                        Logger.d(book.toString());
-                        CartOrOrderBean cartOrOrderBean = new CartOrOrderBean();
-                        cartOrOrderBean.book = book;
-                        cartOrOrderBean.fromUser = book.user;
-                        ShoppingCartBiz.addGoodToCart(book.getObjectId(),cartOrOrderBean.count + "");
-                        mListGoods.add(cartOrOrderBean);
+                    if(mListGoods.isEmpty()){
+                        mListGoods.addAll(list);
+                    }else {
+                        mListGoods.clear();
+                        mListGoods.addAll(list);
                     }
                     updateListView();
                 }else {

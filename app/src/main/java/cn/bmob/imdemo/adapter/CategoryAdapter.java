@@ -9,12 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.ArrayList;
 
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.bean.Book;
+import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.FatherData;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.ui.ChatActivity;
@@ -23,6 +26,8 @@ import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.newim.core.ConnectionStatus;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by cyq7on on 18-3-24.
@@ -97,12 +102,12 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         childrenView.tvPrice.setText(String.format("￥%s",book.price));
         ImageLoaderFactory.getLoader().loadAvator(childrenView.ivBook,book.imageUrl,
                 R.mipmap.ic_launcher);
+        final User user = book.user;
+        final User currentUser = BmobUser.getCurrentUser(User.class);
         childrenView.ivChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                User user = book.user;
-                User currentUser = BmobUser.getCurrentUser(User.class);
                 if(user.getObjectId().equals(currentUser.getObjectId())){
                     toast("这是你自己的书哦");
                     return;
@@ -123,7 +128,26 @@ public class CategoryAdapter extends BaseExpandableListAdapter {
         childrenView.ivCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(user.getObjectId().equals(currentUser.getObjectId())){
+                    toast("这是你自己的书哦");
+                    return;
+                }
+                CartOrOrderBean bean = new CartOrOrderBean();
+                bean.book = book;
+                bean.fromUser = user;
+                bean.toUser = currentUser;
+                bean.count = 1;
+                bean.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        if(e == null){
+                            toast("成功加入购物车");
+                        }else {
+                            Logger.e(e);
+                            toast("加入购物车出错");
+                        }
+                    }
+                });
             }
         });
         return arg3;
