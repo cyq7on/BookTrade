@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CartAdapter;
+import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.User;
@@ -57,6 +58,7 @@ public class CartFragment extends ParentWithNaviFragment {
         initNaviView();
         setAdapter();
         initView();
+        query();
         return rootView;
     }
 
@@ -71,7 +73,7 @@ public class CartFragment extends ParentWithNaviFragment {
     }
 
     private void setAdapter() {
-        adapter = new CartAdapter(getContext());
+        adapter = new CartAdapter((BaseActivity) getActivity());
         expandableListView.setAdapter(adapter);
         adapter.setOnShoppingCartChangeListener(new CartAdapter.OnShoppingCartChangeListener() {
             @Override

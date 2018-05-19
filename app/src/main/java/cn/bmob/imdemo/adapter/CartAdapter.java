@@ -1,7 +1,7 @@
 package cn.bmob.imdemo.adapter;
 
-import android.content.Context;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.imdemo.R;
+import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.ShoppingCartBean;
+import cn.bmob.imdemo.bean.User;
+import cn.bmob.imdemo.ui.ChatActivity;
 import cn.bmob.imdemo.ui.UIAlertView;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMConversation;
+import cn.bmob.newim.bean.BmobIMUserInfo;
 
 /**
  * * ---------神兽保佑 !---------
@@ -45,7 +51,7 @@ import cn.bmob.imdemo.util.ShoppingCartBiz;
  * <p/>
  */
 public class CartAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
+    private BaseActivity mContext;
     private List<CartOrOrderBean> mListGoods = new ArrayList<>();
     private OnShoppingCartChangeListener mChangeListener;
     private boolean isSelectAll = false;
@@ -55,7 +61,7 @@ public class CartAdapter extends BaseExpandableListAdapter {
         void onSelectItem(boolean isSelectedAll);
     }
 
-    public CartAdapter(Context context) {
+    public CartAdapter(BaseActivity context) {
         mContext = context;
     }
 
@@ -110,7 +116,7 @@ public class CartAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         GroupViewHolder holder;
         if (convertView == null) {
             holder = new GroupViewHolder();
@@ -124,6 +130,19 @@ public class CartAdapter extends BaseExpandableListAdapter {
         }
         CartOrOrderBean group = getGroup(groupPosition);
         holder.tvGroup.setText(group.fromUser.getUsername());
+        holder.tvGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User user = getGroup(groupPosition).fromUser;
+                BmobIMUserInfo info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(),
+                        user.getAvatar());
+                BmobIMConversation conversationEntrance = BmobIM.getInstance().
+                        startPrivateConversation(info, null);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("c", conversationEntrance);
+                mContext.startActivity(ChatActivity.class, bundle, false);
+            }
+        });
         ShoppingCartBiz.checkItem(group.isChecked, holder.ivCheckGroup);
         boolean isEditing = group.isEdit;
         if (isEditing) {
@@ -135,7 +154,6 @@ public class CartAdapter extends BaseExpandableListAdapter {
         holder.ivCheckGroup.setOnClickListener(listener);
         holder.tvEdit.setTag(groupPosition);
         holder.tvEdit.setOnClickListener(listener);
-        holder.tvGroup.setOnClickListener(listener);
         return convertView;
     }
 
@@ -198,7 +216,8 @@ public class CartAdapter extends BaseExpandableListAdapter {
             holder.rlEditStatus.setVisibility(View.GONE);
         }
 
-        holder.ivCheckGood.setOnClickListener(listener);
+//        holder.ivCheckGood.setOnClickListener(listener);
+        holder.ivCheckGood.setVisibility(View.GONE);
         holder.tvDel.setOnClickListener(listener);
         holder.ivAdd.setOnClickListener(listener);
         holder.ivReduce.setOnClickListener(listener);
@@ -279,11 +298,11 @@ public class CartAdapter extends BaseExpandableListAdapter {
                     setSettleInfo();
                     break;
                 case R.id.llGoodInfo:
-                    toast("商品详情，暂未实现");
+//                    toast("商品详情，暂未实现");
                     break;
-                case R.id.tvShopNameGroup:
-                    toast("商铺详情，暂未实现");
-                    break;
+                /*case R.id.tvShopNameGroup:
+
+                    break;*/
             }
         }
     };
