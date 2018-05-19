@@ -20,4 +20,5 @@ public class CartOrOrderBean extends BmobObject {
     //是否选中
     public boolean isChecked = false;
     public boolean isEdit = false;
+    public String address;
 }

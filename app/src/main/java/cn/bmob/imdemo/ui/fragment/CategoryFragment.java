@@ -5,8 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 
 import com.orhanobut.logger.Logger;
@@ -24,6 +26,7 @@ import cn.bmob.imdemo.base.ParentWithNaviFragment;
 import cn.bmob.imdemo.bean.Book;
 import cn.bmob.imdemo.bean.FatherData;
 import cn.bmob.imdemo.bean.User;
+import cn.bmob.imdemo.ui.SearchActivity;
 import cn.bmob.imdemo.ui.UploadBookActivity;
 import cn.bmob.imdemo.ui.UserInfoActivity;
 import cn.bmob.v3.BmobQuery;
@@ -42,6 +45,8 @@ public class CategoryFragment extends ParentWithNaviFragment {
     ExpandableListView expandList;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout swRefresh;
+    @Bind(R.id.et_search)
+    EditText etSearch;
     private ArrayList<FatherData> list = new ArrayList<>();
     private CategoryAdapter adapter;
 
@@ -65,7 +70,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
 
             @Override
             public void clickRight() {
-                startActivity(UploadBookActivity.class,null);
+                startActivity(UploadBookActivity.class, null);
             }
         };
     }
@@ -74,7 +79,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createData();
-        adapter = new CategoryAdapter((BaseActivity) getActivity(),list);
+        adapter = new CategoryAdapter((BaseActivity) getActivity(), list);
     }
 
     @Nullable
@@ -94,9 +99,9 @@ public class CategoryFragment extends ParentWithNaviFragment {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 Bundle bundle = new Bundle();
-                Book book = adapter.getChild(i,i1);
+                Book book = adapter.getChild(i, i1);
                 User user = book.user;
-                if(user.getObjectId().equals(CategoryFragment.this.user.getObjectId())){
+                if (user.getObjectId().equals(CategoryFragment.this.user.getObjectId())) {
                     toast("这是你自己的书哦");
                     return false;
                 }
@@ -108,7 +113,7 @@ public class CategoryFragment extends ParentWithNaviFragment {
         expandList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                if(adapter.getChildrenCount(i) == 0){
+                if (adapter.getChildrenCount(i) == 0) {
                     toast("暂无该类图书");
                     return true;
                 }
@@ -119,6 +124,16 @@ public class CategoryFragment extends ParentWithNaviFragment {
             @Override
             public void onRefresh() {
                 query(null);
+            }
+        });
+        etSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    startActivity(SearchActivity.class,null);
+                    return true;
+                }
+                return false;
             }
         });
         return rootView;
@@ -139,35 +154,35 @@ public class CategoryFragment extends ParentWithNaviFragment {
         //免费版不支持模糊查询
 //        query.addWhereContains("name",keyWord);
         query.addWhereMatchesQuery("user", "_User", innerQuery);
-        if(TextUtils.isEmpty(keyWord)){
+        if (TextUtils.isEmpty(keyWord)) {
             query.findObjects(new FindListener<Book>() {
                 @Override
                 public void done(List<Book> books, BmobException e) {
                     swRefresh.setRefreshing(false);
-                    if(e == null){
+                    if (e == null) {
                         clearData();
                         for (Book book : books) {
                             list.get(book.categoryId).getList().add(book);
                         }
                         adapter.notifyDataSetChanged();
-                    }else {
+                    } else {
                         Logger.e(e);
                         toast("获取信息出错");
                     }
                 }
             });
-        }else {
+        } else {
             query.findObjects(new FindListener<Book>() {
                 @Override
                 public void done(List<Book> books, BmobException e) {
                     swRefresh.setRefreshing(false);
-                    if(e == null){
+                    if (e == null) {
                         clearData();
                         for (Book book : books) {
                             list.get(book.categoryId).getList().add(book);
                         }
                         adapter.notifyDataSetChanged();
-                    }else {
+                    } else {
                         Logger.e(e);
                         toast("获取信息出错");
                     }

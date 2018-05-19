@@ -7,6 +7,18 @@
 
     <include android:id="@+id/ll" layout="@layout/include_navi"/>
 
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_40"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_normal_shape"
+        android:hint="输入书名"
+        android:paddingLeft="5dp"
+        android:singleLine="true"
+        android:textColorHint="#b3b3b3"
+        android:textSize="18sp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sw_refresh"
         android:layout_marginTop="@dimen/margin_10"

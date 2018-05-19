@@ -86,11 +86,9 @@ public class DietPlanFragment extends ParentWithNaviFragment {
         swRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swRefresh.setRefreshing(true);
                 query();
             }
         });
-
 
         return rootView;
     }
