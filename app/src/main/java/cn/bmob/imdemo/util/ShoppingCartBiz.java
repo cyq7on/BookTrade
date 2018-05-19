@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.imdemo.R;
+import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.ShoppingCartBean;
 
 /**
@@ -17,7 +18,7 @@ public class ShoppingCartBiz {
     /**
      * 选择全部，点下全部按钮，改变所有商品选中状态
      */
-    public static boolean selectAll(List<ShoppingCartBean> list, boolean isSelectAll, ImageView ivCheck) {
+    /*public static boolean selectAll(List<ShoppingCartBean> list, boolean isSelectAll, ImageView ivCheck) {
         isSelectAll = !isSelectAll;
         ShoppingCartBiz.checkItem(isSelectAll, ivCheck);
         for (int i = 0; i < list.size(); i++) {
@@ -25,6 +26,15 @@ public class ShoppingCartBiz {
             for (int j = 0; j < list.get(i).getGoods().size(); j++) {
                 list.get(i).getGoods().get(j).setIsChildSelected(isSelectAll);
             }
+        }
+        return isSelectAll;
+    }*/
+
+    public static boolean selectAll(List<CartOrOrderBean> list, boolean isSelectAll, ImageView ivCheck) {
+        isSelectAll = !isSelectAll;
+        ShoppingCartBiz.checkItem(isSelectAll, ivCheck);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).isChecked = isSelectAll;
         }
         return isSelectAll;
     }
@@ -35,9 +45,19 @@ public class ShoppingCartBiz {
      * @param list
      * @return
      */
-    private static boolean isSelectAllGroup(List<ShoppingCartBean> list) {
+    /*private static boolean isSelectAllGroup(List<ShoppingCartBean> list) {
         for (int i = 0; i < list.size(); i++) {
             boolean isSelectGroup = list.get(i).isGroupSelected();
+            if (!isSelectGroup) {
+                return false;
+            }
+        }
+        return true;
+    }*/
+
+    private static boolean isSelectAllGroup(List<CartOrOrderBean> list) {
+        for (int i = 0; i < list.size(); i++) {
+            boolean isSelectGroup = list.get(i).isChecked;
             if (!isSelectGroup) {
                 return false;
             }
@@ -51,9 +71,19 @@ public class ShoppingCartBiz {
      * @param list
      * @return
      */
-    private static boolean isSelectAllChild(List<ShoppingCartBean.Goods> list) {
+    /*private static boolean isSelectAllChild(List<ShoppingCartBean.Goods> list) {
         for (int i = 0; i < list.size(); i++) {
             boolean isSelectGroup = list.get(i).isChildSelected();
+            if (!isSelectGroup) {
+                return false;
+            }
+        }
+        return true;
+    }*/
+
+    private static boolean isSelectAllChild(List<CartOrOrderBean> list) {
+        for (int i = 0; i < list.size(); i++) {
+            boolean isSelectGroup = list.get(i).isChecked;
             if (!isSelectGroup) {
                 return false;
             }
@@ -70,7 +100,7 @@ public class ShoppingCartBiz {
      * @param childPosition
      * @return 是否选择全部
      */
-    public static boolean selectOne(List<ShoppingCartBean> list, int groudPosition, int childPosition) {
+    /*public static boolean selectOne(List<ShoppingCartBean> list, int groudPosition, int childPosition) {
         boolean isSelectAll;
         boolean isSelectedOne = !(list.get(groudPosition).getGoods().get(childPosition).isChildSelected());
         list.get(groudPosition).getGoods().get(childPosition).setIsChildSelected(isSelectedOne);//单个图标的处理
@@ -78,14 +108,35 @@ public class ShoppingCartBiz {
         list.get(groudPosition).setIsGroupSelected(isSelectCurrentGroup);//组图标的处理
         isSelectAll = isSelectAllGroup(list);
         return isSelectAll;
+    }*/
+
+    public static boolean selectOne(List<CartOrOrderBean> list, int groudPosition, int childPosition) {
+        boolean isSelectAll;
+        boolean isSelectedOne = !(list.get(groudPosition).isChecked);
+        list.get(groudPosition).isChecked = isSelectedOne;//单个图标的处理
+        boolean isSelectCurrentGroup = isSelectAllChild(list);
+        list.get(groudPosition).isChecked = isSelectCurrentGroup;//组图标的处理
+        isSelectAll = isSelectAllGroup(list);
+        return isSelectAll;
     }
 
-    public static boolean selectGroup(List<ShoppingCartBean> list, int groudPosition) {
+    /*public static boolean selectGroup(List<ShoppingCartBean> list, int groudPosition) {
         boolean isSelectAll;
         boolean isSelected = !(list.get(groudPosition).isGroupSelected());
         list.get(groudPosition).setIsGroupSelected(isSelected);
         for (int i = 0; i < list.get(groudPosition).getGoods().size(); i++) {
             list.get(groudPosition).getGoods().get(i).setIsChildSelected(isSelected);
+        }
+        isSelectAll = isSelectAllGroup(list);
+        return isSelectAll;
+    }*/
+
+    public static boolean selectGroup(List<CartOrOrderBean> list, int groudPosition) {
+        boolean isSelectAll;
+        boolean isSelected = !(list.get(groudPosition).isChecked);
+        list.get(groudPosition).isChecked = isSelected;
+        for (int i = 0; i < list.size(); i++) {
+            list.get(groudPosition).isChecked = isSelected;
         }
         isSelectAll = isSelectAllGroup(list);
         return isSelectAll;
@@ -114,7 +165,7 @@ public class ShoppingCartBiz {
      *
      * @return 0=选中的商品数量；1=选中的商品总价
      */
-    public static String[] getShoppingCount(List<ShoppingCartBean> listGoods) {
+    /*public static String[] getShoppingCount(List<ShoppingCartBean> listGoods) {
         String[] infos = new String[2];
         String selectedCount = "0";
         String selectedMoney = "0";
@@ -133,10 +184,37 @@ public class ShoppingCartBiz {
         infos[0] = selectedCount;
         infos[1] = selectedMoney;
         return infos;
+    }*/
+
+    public static String[] getShoppingCount(List<CartOrOrderBean> listGoods) {
+        String[] infos = new String[2];
+        String selectedCount = "0";
+        String selectedMoney = "0";
+        for (int i = 0; i < listGoods.size(); i++) {
+                boolean isSelectd = listGoods.get(i).isChecked;
+                if (isSelectd) {
+                    String price = listGoods.get(i).book.price;
+                    String num = listGoods.get(i).count + "";
+                    String countMoney = DecimalUtil.multiply(price, num);
+                    selectedMoney = DecimalUtil.add(selectedMoney, countMoney);
+                    selectedCount = DecimalUtil.add(selectedCount, "1");
+                }
+        }
+        infos[0] = selectedCount;
+        infos[1] = selectedMoney;
+        return infos;
     }
 
 
-    public static boolean hasSelectedGoods(List<ShoppingCartBean> listGoods) {
+    /*public static boolean hasSelectedGoods(List<ShoppingCartBean> listGoods) {
+        String count = getShoppingCount(listGoods)[0];
+        if ("0".equals(count)) {
+            return false;
+        }
+        return true;
+    }
+*/
+    public static boolean hasSelectedGoods(List<CartOrOrderBean> listGoods) {
         String count = getShoppingCount(listGoods)[0];
         if ("0".equals(count)) {
             return false;

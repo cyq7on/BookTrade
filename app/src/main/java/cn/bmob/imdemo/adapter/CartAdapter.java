@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.imdemo.R;
+import cn.bmob.imdemo.base.ImageLoaderFactory;
+import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.ShoppingCartBean;
+import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.ui.UIAlertView;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
 
@@ -42,10 +45,9 @@ import cn.bmob.imdemo.util.ShoppingCartBiz;
  * .┗┻┛  ┗┻┛
  * <p/>
  */
-@Deprecated
-public class MyExpandableListAdapter extends BaseExpandableListAdapter {
+public class CartAdapter extends BaseExpandableListAdapter {
     private Context mContext;
-    private List<ShoppingCartBean> mListGoods = new ArrayList<>();
+    private List<CartOrOrderBean> mListGoods = new ArrayList<>();
     private OnShoppingCartChangeListener mChangeListener;
     private boolean isSelectAll = false;
 
@@ -54,11 +56,11 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         void onSelectItem(boolean isSelectedAll);
     }
 
-    public MyExpandableListAdapter(Context context) {
+    public CartAdapter(Context context) {
         mContext = context;
     }
 
-    public void setList(List<ShoppingCartBean> mListGoods) {
+    public void setList(List<CartOrOrderBean> mListGoods) {
         this.mListGoods = mListGoods;
         setSettleInfo();
     }
@@ -78,17 +80,18 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mListGoods.get(groupPosition).getGoods().size();
+//        return mListGoods.get(groupPosition).getGoods().size();
+        return mListGoods.size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return mListGoods.get(groupPosition);
+    public User getGroup(int groupPosition) {
+        return mListGoods.get(groupPosition).fromUser;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return mListGoods.get(groupPosition).getGoods().get(childPosition);
+    public CartOrOrderBean getChild(int groupPosition, int childPosition) {
+        return mListGoods.get(childPosition);
     }
 
     @Override
@@ -108,7 +111,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        GroupViewHolder holder = null;
+        GroupViewHolder holder;
         if (convertView == null) {
             holder = new GroupViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_elv_group_test, parent, false);
@@ -119,9 +122,10 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (GroupViewHolder) convertView.getTag();
         }
-        holder.tvGroup.setText(mListGoods.get(groupPosition).getMerchantName());
-        ShoppingCartBiz.checkItem(mListGoods.get(groupPosition).isGroupSelected(), holder.ivCheckGroup);
-        boolean isEditing = mListGoods.get(groupPosition).isEditing();
+        User group = getGroup(groupPosition);
+        holder.tvGroup.setText(group.getUsername());
+        ShoppingCartBiz.checkItem(mListGoods.get(groupPosition).isChecked, holder.ivCheckGroup);
+        boolean isEditing = mListGoods.get(groupPosition).isEdit;
         if (isEditing) {
             holder.tvEdit.setText("完成");
         } else {
@@ -140,13 +144,14 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
      */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ChildViewHolder holder = null;
+        ChildViewHolder holder;
         if (convertView == null) {
             holder = new ChildViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_elv_child_test, parent, false);
             holder.tvChild = (TextView) convertView.findViewById(R.id.tvItemChild);
             holder.tvDel = (TextView) convertView.findViewById(R.id.tvDel);
             holder.ivCheckGood = (ImageView) convertView.findViewById(R.id.ivCheckGood);
+            holder.ivGoods = (ImageView) convertView.findViewById(R.id.ivGoods);
             holder.rlEditStatus = (RelativeLayout) convertView.findViewById(R.id.rlEditStatus);
             holder.llGoodInfo = (LinearLayout) convertView.findViewById(R.id.llGoodInfo);
             holder.ivAdd = (ImageView) convertView.findViewById(R.id.ivAdd);
@@ -161,25 +166,26 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ChildViewHolder) convertView.getTag();
         }
-        ShoppingCartBean.Goods goods = mListGoods.get(groupPosition).getGoods().get(childPosition);
-        boolean isChildSelected = mListGoods.get(groupPosition).getGoods().get(childPosition).isChildSelected();
-        boolean isEditing = goods.isEditing();
-        String priceNew = "¥" + goods.getPrice();
-        String priceOld = "¥" + goods.getMkPrice();
-        String num = goods.getNumber();
-        String pdtDesc = goods.getPdtDesc();
-        String goodName = mListGoods.get(groupPosition).getGoods().get(childPosition).getGoodsName();
+        CartOrOrderBean child = getChild(groupPosition, childPosition);
+        boolean isChildSelected = child.isChecked;
+        boolean isEditing = child.isEdit;
+        String priceNew = "¥" + child.book.price;
+//        String priceOld = "¥" + goods.getMkPrice();
+        String num = child.count + "";
+        String pdtDesc = child.book.info;
+        String goodName = child.book.name;
 
         holder.ivCheckGood.setTag(groupPosition + "," + childPosition);
         holder.tvChild.setText(goodName);
         holder.tvPriceNew.setText(priceNew);
-        holder.tvPriceOld.setText(priceOld);
+//        holder.tvPriceOld.setText(priceOld);
+        holder.tvPriceOld.setVisibility(View.GONE);
         holder.tvNum.setText("X " + num);
         holder.tvNum2.setText(num);
         holder.tvGoodsParam.setText(pdtDesc);
 
-        holder.ivAdd.setTag(goods);
-        holder.ivReduce.setTag(goods);
+        holder.ivAdd.setTag(child);
+        holder.ivReduce.setTag(child);
         holder.tvDel.setTag(groupPosition + "," + childPosition);
         holder.tvDel.setTag(groupPosition + "," + childPosition);
 
@@ -197,6 +203,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         holder.ivAdd.setOnClickListener(listener);
         holder.ivReduce.setOnClickListener(listener);
         holder.llGoodInfo.setOnClickListener(listener);
+        ImageLoaderFactory.getLoader().loadAvator(holder.ivGoods,child.book.imageUrl,R.mipmap.ic_launcher);
         return convertView;
     }
 
@@ -208,15 +215,15 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            /*switch (v.getId()) {
+            switch (v.getId()) {
                 //main
                 case R.id.ivSelectAll:
                     isSelectAll = ShoppingCartBiz.selectAll(mListGoods, isSelectAll, (ImageView) v);
                     setSettleInfo();
                     notifyDataSetChanged();
                     break;
-                *//*case R.id.tvEditAll:
-                    break;*//*
+                /*case R.id.tvEditAll:
+                    break;*/
                 case R.id.btnSettle:
                     if (ShoppingCartBiz.hasSelectedGoods(mListGoods)) {
                         toast("结算跳转");
@@ -227,11 +234,11 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
                     break;
                 case R.id.tvEdit://切换界面，属于特殊处理，假如没打算切换界面，则不需要这块代码
                     int groupPosition2 = Integer.parseInt(String.valueOf(v.getTag()));
-                    boolean isEditing = !(mListGoods.get(groupPosition2).isEditing());
-                    mListGoods.get(groupPosition2).setIsEditing(isEditing);
-                    for (int i = 0; i < mListGoods.get(groupPosition2).getGoods().size(); i++) {
+                    boolean isEditing = !(mListGoods.get(groupPosition2).isEdit);
+                    mListGoods.get(groupPosition2).isEdit = isEditing;
+                    /*for (int i = 0; i < mListGoods.get(groupPosition2).getGoods().size(); i++) {
                         mListGoods.get(groupPosition2).getGoods().get(i).setIsEditing(isEditing);
-                    }
+                    }*/
                     notifyDataSetChanged();
                     break;
                 case R.id.ivCheckGroup:
@@ -277,7 +284,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
                 case R.id.tvShopNameGroup:
                     toast("商铺详情，暂未实现");
                     break;
-            }*/
+            }
         }
     };
 
@@ -293,11 +300,11 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void setSettleInfo() {
-        /*String[] infos = ShoppingCartBiz.getShoppingCount(mListGoods);
+        String[] infos = ShoppingCartBiz.getShoppingCount(mListGoods);
         //删除或者选择商品之后，需要通知结算按钮，更新自己的数据；
         if (mChangeListener != null && infos != null) {
             mChangeListener.onDataChange(infos[0], infos[1]);
-        }*/
+        }
     }
 
     private void showDelDialog(final int groupPosition, final int childPosition) {
@@ -314,8 +321,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
                                        @Override
                                        public void doRight() {
-                                           String productID = mListGoods.get(groupPosition).getGoods().get(childPosition).getProductID();
-                                           ShoppingCartBiz.delGood(productID);
+                                           /*String productID = mListGoods.get(groupPosition).getGoods().get(childPosition).getProductID();
+                                           ShoppingCartBiz.delGood(productID);*/
                                            delGoods(groupPosition, childPosition);
                                            setSettleInfo();
                                            notifyDataSetChanged();
@@ -326,10 +333,11 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     private void delGoods(int groupPosition, int childPosition) {
-        mListGoods.get(groupPosition).getGoods().remove(childPosition);
+        /*mListGoods.get(groupPosition).getGoods().remove(childPosition);
         if (mListGoods.get(groupPosition).getGoods().size() == 0) {
             mListGoods.remove(groupPosition);
-        }
+        }*/
+        mListGoods.remove(groupPosition);
         notifyDataSetChanged();
     }
 
@@ -346,6 +354,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tvGoodsParam;
         /** 选中 */
         ImageView ivCheckGood;
+        //图书照片
+        ImageView ivGoods;
         /** 非编辑状态 */
         LinearLayout llGoodInfo;
         /** 编辑状态 */

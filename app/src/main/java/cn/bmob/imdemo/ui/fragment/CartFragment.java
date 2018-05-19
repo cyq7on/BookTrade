@@ -23,10 +23,15 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.bmob.imdemo.R;
-import cn.bmob.imdemo.adapter.MyExpandableListAdapter;
+import cn.bmob.imdemo.adapter.CartAdapter;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
-import cn.bmob.imdemo.bean.ShoppingCartBean;
+import cn.bmob.imdemo.bean.Book;
+import cn.bmob.imdemo.bean.CartOrOrderBean;
+import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class CartFragment extends ParentWithNaviFragment {
 
@@ -42,8 +47,8 @@ public class CartFragment extends ParentWithNaviFragment {
     TextView tvTitle;*/
     @Bind(R.id.rlShoppingCartEmpty)
     RelativeLayout rlShoppingCartEmpty;
-    private List<ShoppingCartBean> mListGoods = new ArrayList<>();
-    private MyExpandableListAdapter adapter;
+    private List<CartOrOrderBean> mListGoods = new ArrayList<>();
+    private CartAdapter adapter;
 
     @Override
     protected String title() {
@@ -62,10 +67,16 @@ public class CartFragment extends ParentWithNaviFragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        query();
+    }
+
     private void setAdapter() {
-        adapter = new MyExpandableListAdapter(getContext());
+        adapter = new CartAdapter(getContext());
         expandableListView.setAdapter(adapter);
-        adapter.setOnShoppingCartChangeListener(new MyExpandableListAdapter.OnShoppingCartChangeListener() {
+        adapter.setOnShoppingCartChangeListener(new CartAdapter.OnShoppingCartChangeListener() {
             @Override
             public void onDataChange(String selectCount, String selectMoney) {
                 int goodsCount = ShoppingCartBiz.getGoodsCount();
@@ -122,7 +133,7 @@ public class CartFragment extends ParentWithNaviFragment {
     /** 获取购物车列表的数据（数据和网络请求也是非通用部分） */
     private void requestShoppingCartList() {
         ShoppingCartBiz.delAllGoods();
-        testAddGood();
+//        testAddGood();
         //使用本地JSON，作测试用。本来应该是将商品ID发送的服务器，服务器返回对应的商品信息；
         /*ShoppingCartHttpBiz.requestOrderList(this, new VollyHelperNew.ResponseCallBack() {//requestOrderList(list, new VollyHelperNew.ResponseCallBack())
             @Override
@@ -198,5 +209,36 @@ public class CartFragment extends ParentWithNaviFragment {
         ShoppingCartBiz.addGoodToCart("7d6e52fb-d57c-45ee-8f05-50905138801f", "3");
         ShoppingCartBiz.addGoodToCart("7d6e52fb-d57c-45ee-8f05-50905138801g", "3");
         ShoppingCartBiz.addGoodToCart("7d6e52fb-d57c-45ee-8f05-50905138801h", "3");
+    }
+
+    private void query() {
+        BmobQuery<Book> query = new BmobQuery<>();
+        query.order("-updatedAt");
+        query.include("user");
+        BmobQuery<User> innerQuery = new BmobQuery<>();
+        //免费版不支持模糊查询
+//        query.addWhereContains("name",keyWord);
+        query.addWhereMatchesQuery("user", "_User", innerQuery);
+        query.findObjects(new FindListener<Book>() {
+            @Override
+            public void done(List<Book> books, BmobException e) {
+//                swRefresh.setRefreshing(false);
+                if(e == null){
+//                    clearData();
+                    for (Book book : books) {
+                        Logger.d(book.toString());
+                        CartOrOrderBean cartOrOrderBean = new CartOrOrderBean();
+                        cartOrOrderBean.book = book;
+                        cartOrOrderBean.fromUser = book.user;
+                        ShoppingCartBiz.addGoodToCart(book.getObjectId(),cartOrOrderBean.count + "");
+                        mListGoods.add(cartOrOrderBean);
+                    }
+                    updateListView();
+                }else {
+                    Logger.e(e);
+                    toast("获取信息出错");
+                }
+            }
+        });
     }
 }

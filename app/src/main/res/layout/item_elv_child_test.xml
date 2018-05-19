@@ -18,15 +18,14 @@
 
     <ImageView
         android:id="@+id/ivGoods"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivCheckGood"
-        android:layout_toRightOf="@+id/ivCheckGood"
-        android:background="@drawable/test_goods"/>
+        android:layout_toRightOf="@+id/ivCheckGood" />
 
     <LinearLayout
         android:id="@+id/llGoodInfo"
