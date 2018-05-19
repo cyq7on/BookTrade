@@ -19,7 +19,6 @@ import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.ShoppingCartBean;
-import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.ui.UIAlertView;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
 
@@ -81,12 +80,13 @@ public class CartAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
 //        return mListGoods.get(groupPosition).getGoods().size();
-        return mListGoods.size();
+//        return mListGoods.size();
+        return mListGoods.size() == 0 ? 0 : 1;
     }
 
     @Override
-    public User getGroup(int groupPosition) {
-        return mListGoods.get(groupPosition).fromUser;
+    public CartOrOrderBean getGroup(int groupPosition) {
+        return mListGoods.get(groupPosition);
     }
 
     @Override
@@ -122,10 +122,10 @@ public class CartAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (GroupViewHolder) convertView.getTag();
         }
-        User group = getGroup(groupPosition);
-        holder.tvGroup.setText(group.getUsername());
-        ShoppingCartBiz.checkItem(mListGoods.get(groupPosition).isChecked, holder.ivCheckGroup);
-        boolean isEditing = mListGoods.get(groupPosition).isEdit;
+        CartOrOrderBean group = getGroup(groupPosition);
+        holder.tvGroup.setText(group.fromUser.getUsername());
+        ShoppingCartBiz.checkItem(group.isChecked, holder.ivCheckGroup);
+        boolean isEditing = group.isEdit;
         if (isEditing) {
             holder.tvEdit.setText("完成");
         } else {
@@ -166,7 +166,7 @@ public class CartAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ChildViewHolder) convertView.getTag();
         }
-        CartOrOrderBean child = getChild(groupPosition, childPosition);
+        CartOrOrderBean child = getGroup(groupPosition);
         boolean isChildSelected = child.isChecked;
         boolean isEditing = child.isEdit;
         String priceNew = "¥" + child.book.price;
