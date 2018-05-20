@@ -68,5 +68,5 @@ dependencies {
     compile('com.yuyh.imgsel:library:2.0.2') {
         exclude module: 'support-v4'
     }
-
+    compile 'com.tencent.bugly:crashreport:2.6.6.1'
 }

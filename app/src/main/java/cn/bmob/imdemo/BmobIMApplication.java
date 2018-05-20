@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
 
@@ -46,17 +47,19 @@ public class BmobIMApplication extends Application {
         if (getApplicationInfo().packageName.equals(getMyProcessName())) {
             BmobIM.init(this);
             BmobIM.registerDefaultMessageHandler(new DemoMessageHandler(this));
+            Logger.init("BmobNewIMDemo");
+            UniversalImageLoader.initImageLoader(this);
+            // 自定义图片加载器
+            ISNav.getInstance().init(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, String path, ImageView imageView) {
+                    com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage("file://" + path,imageView);
+                }
+            });
+            DBHelper.init(getApplicationContext());
+            CrashReport.initCrashReport(getApplicationContext(), "f90a2b5591", false);
         }
-        Logger.init("BmobNewIMDemo");
-        UniversalImageLoader.initImageLoader(this);
-        // 自定义图片加载器
-        ISNav.getInstance().init(new ImageLoader() {
-            @Override
-            public void displayImage(Context context, String path, ImageView imageView) {
-                com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage("file://" + path,imageView);
-            }
-        });
-        DBHelper.init(getApplicationContext());
+
     }
 
     /**
