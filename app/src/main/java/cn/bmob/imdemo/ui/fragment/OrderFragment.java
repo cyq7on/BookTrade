@@ -9,7 +9,9 @@ import java.util.List;
 
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.adapter.CartAdapter;
+import cn.bmob.imdemo.adapter.OrderAdapter;
 import cn.bmob.imdemo.base.BaseActivity;
+import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.bean.CartOrOrderBean;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.imdemo.util.ShoppingCartBiz;
@@ -31,6 +33,26 @@ public class OrderFragment extends CartFragment {
     }
 
     @Override
+    public Object left() {
+        return R.drawable.base_action_bar_back_bg_selector;
+    }
+
+    @Override
+    public ParentWithNaviActivity.ToolBarListener setToolBarListener() {
+        return new ParentWithNaviActivity.ToolBarListener() {
+            @Override
+            public void clickLeft() {
+                getActivity().finish();
+            }
+
+            @Override
+            public void clickRight() {
+
+            }
+        };
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         rlBottomBar.setVisibility(View.GONE);
@@ -38,7 +60,7 @@ public class OrderFragment extends CartFragment {
 
     @Override
     protected void setAdapter() {
-        adapter = new CartAdapter((BaseActivity) getActivity());
+        adapter = new OrderAdapter((BaseActivity) getActivity());
         expandableListView.setAdapter(adapter);
         adapter.setOnShoppingCartChangeListener(new CartAdapter.OnShoppingCartChangeListener() {
             @Override
@@ -87,6 +109,7 @@ public class OrderFragment extends CartFragment {
     protected void query() {
         BmobQuery<CartOrOrderBean> query = new BmobQuery<>();
         query.order("-updatedAt");
+        query.addWhereEqualTo("isCart",false);
         query.include("fromUser,toUser,book");
         BmobQuery<User> innerQuery = new BmobQuery<>();
         innerQuery.addWhereEqualTo("objectId", user.getObjectId());

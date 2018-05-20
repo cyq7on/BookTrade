@@ -165,6 +165,7 @@ public class CartFragment extends ParentWithNaviFragment {
     protected void query() {
         BmobQuery<CartOrOrderBean> query = new BmobQuery<>();
         query.order("-updatedAt");
+        query.addWhereEqualTo("isCart",true);
         query.include("fromUser,toUser,book");
         BmobQuery<User> innerQuery = new BmobQuery<>();
         innerQuery.addWhereEqualTo("objectId", user.getObjectId());

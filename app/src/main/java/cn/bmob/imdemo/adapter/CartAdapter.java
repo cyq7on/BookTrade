@@ -54,7 +54,7 @@ import cn.bmob.v3.listener.UpdateListener;
  * <p/>
  */
 public class CartAdapter extends BaseExpandableListAdapter {
-    private BaseActivity mContext;
+    protected BaseActivity mContext;
     private List<CartOrOrderBean> mListGoods = new ArrayList<>();
     private OnShoppingCartChangeListener mChangeListener;
     private boolean isSelectAll = false;
@@ -248,7 +248,25 @@ public class CartAdapter extends BaseExpandableListAdapter {
                     break;*/
                 case R.id.btnSettle:
                     if (ShoppingCartBiz.hasSelectedGoods(mListGoods)) {
-                        toast("结算跳转");
+                        for (final CartOrOrderBean bean : mListGoods) {
+                            if(bean.isChecked){
+                                bean.isCart = false;
+                                bean.isChecked = false;
+                                bean.update(new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+                                        if(e == null){
+                                            toast("结算成功");
+                                            mListGoods.remove(bean);
+                                            notifyDataSetChanged();
+                                        }else {
+                                            toast("结算失败");
+                                            bean.isChecked = true;
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     } else {
                         toast("亲，先选择商品！");
                     }

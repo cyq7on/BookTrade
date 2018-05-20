@@ -24,7 +24,7 @@ import cn.bmob.imdemo.bean.User;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-
+@Deprecated
 public class CheckoutActivity extends ParentWithNaviActivity {
 
     @Bind(R.id.rc_view)
