@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_bg"
+    android:orientation="vertical" >
+
+    <include android:id="@+id/ll" layout="@layout/include_navi"/>
+
+    <EditText
+        android:id="@+id/et_start"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_normal_shape"
+        android:hint="输入起点"
+        android:text="大市口"
+        android:paddingLeft="5dp"
+        android:singleLine="true"
+        android:textColorHint="#b3b3b3"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/et_end"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_normal_shape"
+        android:hint="输入终点"
+        android:text="句容市"
+        android:paddingLeft="5dp"
+        android:singleLine="true"
+        android:textColorHint="#b3b3b3"
+        android:textSize="18sp" />
+    <Button
+        android:layout_marginBottom="@dimen/margin_10"
+        android:id="@+id/btn_search"
+        style="@style/style_text_white"
+        android:background="@drawable/btn_login_selector"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="搜索路线"
+        />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sw_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rc_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

@@ -21,9 +21,9 @@
     <string name="login_pwd">密码 </string>
     <string name="login_email">确认密码 </string>
 
-    <string name="main_tab_home">主页</string>
-    <string name="main_tab_recent">消息</string>
-    <string name="main_tab_cart">购物车</string>
+    <string name="main_tab_home">线路</string>
+    <string name="main_tab_recent">站点</string>
+    <string name="main_tab_cart">换乘</string>
     <string name="main_tab_set">个人</string>
 
     <string name="add_avator">头像</string>
