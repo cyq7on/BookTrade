@@ -79,42 +79,6 @@ public class UserModel extends BaseModel {
         });
     }
 
-    public void register(String username, String school,String password, String pwdagain, final LogInListener listener) {
-        if (TextUtils.isEmpty(username)) {
-            listener.done(null, new BmobException(CODE_NULL, "请填写用户名"));
-            return;
-        }
-        if (TextUtils.isEmpty(school)) {
-            listener.done(null, new BmobException(CODE_NULL, "请填写校名"));
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            listener.done(null, new BmobException(CODE_NULL, "请填写密码"));
-            return;
-        }
-        if (TextUtils.isEmpty(pwdagain)) {
-            listener.done(null, new BmobException(CODE_NULL, "请填写确认密码"));
-            return;
-        }
-        if (!password.equals(pwdagain)) {
-            listener.done(null, new BmobException(CODE_NULL, "两次输入的密码不一致，请重新输入"));
-            return;
-        }
-        final User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.school = school;
-        user.signUp(new SaveListener<User>() {
-            @Override
-            public void done(User user, BmobException e) {
-                if (e == null) {
-                    listener.done(null, null);
-                } else {
-                    listener.done(null, e);
-                }
-            }
-        });
-    }
 
     /**
      * TODO 用户管理：2.2、登录

@@ -37,6 +37,7 @@
         android:background="@drawable/base_horizontal_line"/>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rl_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,6 +65,7 @@
         android:background="@drawable/base_horizontal_line"/>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rl_receive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,10 +1,14 @@
 package cn.bmob.imdemo.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.orhanobut.logger.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +20,7 @@ import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.ImageLoaderFactory;
 import cn.bmob.imdemo.base.ParentWithNaviActivity;
 import cn.bmob.imdemo.bean.AddFriendMessage;
+import cn.bmob.imdemo.bean.AdviceFeedback;
 import cn.bmob.imdemo.bean.User;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
@@ -26,6 +31,7 @@ import cn.bmob.newim.core.ConnectionStatus;
 import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * 用户资料
@@ -47,6 +53,10 @@ public class UserInfoActivity extends ParentWithNaviActivity {
     BmobIMUserInfo info;
     @Bind(R.id.tv_school)
     TextView tvSchool;
+    @Bind(R.id.et_advice)
+    EditText etAdvice;
+    @Bind(R.id.btn_advice)
+    Button btnAdvice;
 
     @Override
     protected String title() {
@@ -75,7 +85,6 @@ public class UserInfoActivity extends ParentWithNaviActivity {
         ImageLoaderFactory.getLoader().loadAvator(iv_avator, user.getAvatar(), R.mipmap.head);
         //显示名称
         tv_name.setText(user.getUsername());
-        tvSchool.setText(user.school);
     }
 
 
@@ -138,5 +147,28 @@ public class UserInfoActivity extends ParentWithNaviActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("c", conversationEntrance);
         startActivity(ChatActivity.class, bundle, false);
+    }
+
+    @OnClick(R.id.btn_advice)
+    public void onViewClicked() {
+        String advice = etAdvice.getText().toString();
+        if(TextUtils.isEmpty(advice)){
+            toast("请填写反馈意见");
+            return;
+        }
+        AdviceFeedback adviceFeedback = new AdviceFeedback();
+        adviceFeedback.content = advice;
+        adviceFeedback.user = user;
+        adviceFeedback.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    toast("成功");
+                } else {
+                    Logger.e(e);
+                    toast("失败");
+                }
+            }
+        });
     }
 }

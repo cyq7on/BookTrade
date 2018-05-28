@@ -59,7 +59,7 @@ public class RegisterActivity extends ParentWithNaviActivity {
      */
     @OnClick(R.id.btn_register)
     public void onRegisterClick(View view) {
-        UserModel.getInstance().register(et_username.getText().toString(),etSchool.getText().toString(),
+        UserModel.getInstance().register(et_username.getText().toString(),
                 et_password.getText().toString(), et_password_again.getText().toString(), new LogInListener() {
             @Override
             public void done(Object o, BmobException e) {

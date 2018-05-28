@@ -32,6 +32,7 @@
             android:background="@mipmap/base_horization_line" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/et_school"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/height_title"

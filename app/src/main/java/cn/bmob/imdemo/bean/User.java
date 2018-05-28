@@ -15,7 +15,6 @@ public class User extends BmobUser {
     public String age;
     public int sex;
     public int role;
-    public String school;
 
 
     public User() {
