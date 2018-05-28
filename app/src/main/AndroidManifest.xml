@@ -72,7 +72,7 @@
         <!-- TODO 集成：1.3、配置Bmob平台的应用密钥 -->
         <meta-data
             android:name="Bmob_APP_KEY"
-            android:value="1cc9c0486305e2d323c9ce1c207f98ff" />
+            android:value="01e7649fdf72559a71067135adb7b040" />
 
         <activity android:name=".ui.UploadBookActivity" />
         <activity android:name=".ui.UploadDietActivity" />
