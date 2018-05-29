@@ -33,6 +33,31 @@
         android:singleLine="true"
         android:textColorHint="#b3b3b3"
         android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:text="输入公交搜索"
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_bus"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="39dp"
+            android:background="@drawable/button_normal_shape"
+            android:hint="输入公交"
+            android:text="3路"
+            android:layout_marginLeft="@dimen/margin_5"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:textColorHint="#b3b3b3"
+            android:textSize="18sp" />
+    </LinearLayout>
+
     <Button
         android:layout_marginBottom="@dimen/margin_10"
         android:id="@+id/btn_search"
@@ -43,7 +68,7 @@
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="搜索路线"
+        android:text="搜索"
         />
 
     <android.support.v4.widget.SwipeRefreshLayout

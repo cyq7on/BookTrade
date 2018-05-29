@@ -1,6 +1,7 @@
 package cn.bmob.imdemo.ui.fragment;
 
 import android.text.TextUtils;
+import android.view.View;
 
 import com.orhanobut.logger.Logger;
 
@@ -19,6 +20,7 @@ public class SearchTransferFragment extends SearchRouteFragment {
     @Override
     public void onStart() {
         super.onStart();
+        ll.setVisibility(View.GONE);
         etStart.setText("大市口");
         etEnd.setText("南京市");
     }

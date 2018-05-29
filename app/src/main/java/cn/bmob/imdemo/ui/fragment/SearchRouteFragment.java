@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.orhanobut.logger.Logger;
 
@@ -40,6 +42,12 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
     RecyclerView rcView;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout swRefresh;
+    @Bind(R.id.cb)
+    CheckBox cb;
+    @Bind(R.id.et_bus)
+    EditText etBus;
+    @Bind(R.id.ll_no)
+    LinearLayout ll;
 
     @Override
     protected String title() {
@@ -79,7 +87,6 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
                 query();
             }
         });
-
         return rootView;
     }
 
@@ -106,9 +113,9 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
                     if (list != null && list.size() > 0) {
                         Route route = list.get(0);
                         StringBuilder stringBuilder = new StringBuilder(route.name).
-                        append("\t").append(route.time).
-                        append("\t").append(route.other == null ? "" : route.other);
-                        route.station.add(0,stringBuilder.toString());
+                                append("\t").append(route.time).
+                                append("\t").append(route.other == null ? "" : route.other);
+                        route.station.add(0, stringBuilder.toString());
                         adapter.bindDatas(route.station);
                     } else {
                         if (getUserVisibleHint()) {

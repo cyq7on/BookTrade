@@ -3,38 +3,26 @@ package cn.bmob.imdemo.ui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
-
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import cn.bmob.imdemo.R;
 import cn.bmob.imdemo.base.BaseActivity;
 import cn.bmob.imdemo.base.ParentWithNaviFragment;
-import cn.bmob.imdemo.bean.User;
-import cn.bmob.imdemo.db.NewFriendManager;
 import cn.bmob.imdemo.event.RefreshEvent;
-import cn.bmob.imdemo.ui.fragment.ConversationFragment;
 import cn.bmob.imdemo.ui.fragment.SearchRouteFragment;
+import cn.bmob.imdemo.ui.fragment.SearchStationFragment;
 import cn.bmob.imdemo.ui.fragment.SearchTransferFragment;
 import cn.bmob.imdemo.ui.fragment.SetFragment;
 import cn.bmob.imdemo.util.IMMLeaks;
 import cn.bmob.newim.BmobIM;
-import cn.bmob.newim.bean.BmobIMUserInfo;
-import cn.bmob.newim.core.ConnectionStatus;
 import cn.bmob.newim.event.MessageEvent;
 import cn.bmob.newim.event.OfflineMessageEvent;
-import cn.bmob.newim.listener.ConnectListener;
-import cn.bmob.newim.listener.ConnectStatusChangeListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
 
 /**
  * @author :smile
@@ -69,7 +57,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final User user = BmobUser.getCurrentUser(User.class);
+        /*final User user = BmobUser.getCurrentUser(User.class);
         //TODO 连接：3.1、登录成功、注册成功或处于登录状态重新打开应用后执行连接IM服务器的操作
         //判断用户是否登录，并且连接状态不是已连接，则进行连接操作
         if (!TextUtils.isEmpty(user.getObjectId()) &&
@@ -97,7 +85,7 @@ public class MainActivity extends BaseActivity {
                     Logger.i(BmobIM.getInstance().getCurrentStatus().getMsg());
                 }
             });
-        }
+        }*/
         //解决leancanary提示InputMethodManager内存泄露的问题
         IMMLeaks.fixFocusedViewLeak(getApplication());
     }
@@ -117,7 +105,7 @@ public class MainActivity extends BaseActivity {
 
     private void initTab() {
         homeFragment = new SearchRouteFragment();
-        conversationFragment = new ConversationFragment();
+        conversationFragment = new SearchStationFragment();
         cartFragment = new SearchTransferFragment();
         setFragment = new SetFragment();
         fragments = new Fragment[]{homeFragment, conversationFragment, cartFragment, setFragment};
@@ -218,7 +206,7 @@ public class MainActivity extends BaseActivity {
      */
     private void checkRedPoint() {
         //TODO 会话：4.4、获取全部会话的未读消息数量
-        int count = (int) BmobIM.getInstance().getAllUnReadCount();
+        /*int count = (int) BmobIM.getInstance().getAllUnReadCount();
         if (count > 0) {
             iv_conversation_tips.setVisibility(View.VISIBLE);
         } else {
@@ -229,7 +217,9 @@ public class MainActivity extends BaseActivity {
             iv_contact_tips.setVisibility(View.VISIBLE);
         } else {
             iv_contact_tips.setVisibility(View.GONE);
-        }
+        }*/
+        iv_conversation_tips.setVisibility(View.GONE);
+        iv_contact_tips.setVisibility(View.GONE);
     }
 
 }
