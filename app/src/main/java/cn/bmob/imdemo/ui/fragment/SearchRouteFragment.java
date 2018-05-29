@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
@@ -41,8 +40,6 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
     RecyclerView rcView;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout swRefresh;
-    @Bind(R.id.tv_info)
-    TextView tvInfo;
 
     @Override
     protected String title() {
@@ -108,11 +105,11 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
                 if (e == null) {
                     if (list != null && list.size() > 0) {
                         Route route = list.get(0);
-                        adapter.bindDatas(route.station);
                         StringBuilder stringBuilder = new StringBuilder(route.name).
                         append("\t").append(route.time).
                         append("\t").append(route.other == null ? "" : route.other);
-                        tvInfo.setText(stringBuilder);
+                        route.station.add(0,stringBuilder.toString());
+                        adapter.bindDatas(route.station);
                     } else {
                         if (getUserVisibleHint()) {
                             toast("暂无信息");
