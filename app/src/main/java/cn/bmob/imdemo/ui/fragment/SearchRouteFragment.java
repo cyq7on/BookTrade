@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 
@@ -40,6 +41,8 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
     RecyclerView rcView;
     @Bind(R.id.sw_refresh)
     SwipeRefreshLayout swRefresh;
+    @Bind(R.id.tv_info)
+    TextView tvInfo;
 
     @Override
     protected String title() {
@@ -85,31 +88,37 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
 
     protected void query() {
         String start = etStart.getText().toString();
-        if(TextUtils.isEmpty(start)){
+        if (TextUtils.isEmpty(start)) {
             toast("请输入起点站");
             return;
         }
         String end = etEnd.getText().toString();
-        if(TextUtils.isEmpty(end)){
+        if (TextUtils.isEmpty(end)) {
             toast("请输入终点站");
             return;
         }
         BmobQuery<Route> query = new BmobQuery<>();
         query.order("-updatedAt");
-        query.addWhereEqualTo("start",start);
-        query.addWhereEqualTo("end",end);
+        query.addWhereEqualTo("start", start);
+        query.addWhereEqualTo("end", end);
         query.findObjects(new FindListener<Route>() {
             @Override
             public void done(List<Route> list, BmobException e) {
                 swRefresh.setRefreshing(false);
                 if (e == null) {
                     if (list != null && list.size() > 0) {
+                        Route route = list.get(0);
+                        adapter.bindDatas(route.station);
+                        StringBuilder stringBuilder = new StringBuilder(route.name).
+                        append("\t").append(route.time).
+                        append("\t").append(route.other == null ? "" : route.other);
+                        tvInfo.setText(stringBuilder);
                     } else {
                         if (getUserVisibleHint()) {
                             toast("暂无信息");
                         }
+                        adapter.bindDatas(null);
                     }
-                    adapter.bindDatas(list.get(0).station);
                 } else {
                     if (getUserVisibleHint()) {
                         toast("获取信息出错");
