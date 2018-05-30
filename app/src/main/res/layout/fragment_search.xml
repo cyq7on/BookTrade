@@ -50,7 +50,7 @@
             android:layout_height="39dp"
             android:background="@drawable/button_normal_shape"
             android:hint="输入公交"
-            android:text="3路"
+            android:text="6路"
             android:layout_marginLeft="@dimen/margin_5"
             android:paddingLeft="5dp"
             android:singleLine="true"
