@@ -121,10 +121,10 @@ public class SearchRouteFragment extends ParentWithNaviFragment {
                 if (e == null) {
                     if (list != null && list.size() > 0) {
                         Route route = list.get(0);
-                        StringBuilder stringBuilder = new StringBuilder(route.name).
-                                append("\t").append(route.time).
-                                append("\t").append(route.other == null ? "" : route.other);
-                        route.station.add(0, stringBuilder.toString());
+                        String s = route.name +
+                                "\t" + route.time +
+                                "\t" + (route.other == null ? "" : route.other);
+                        route.station.add(0, s);
                         adapter.bindDatas(route.station);
                     } else {
                         if (getUserVisibleHint()) {

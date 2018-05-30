@@ -61,10 +61,10 @@ public class SearchTransferFragment extends SearchRouteFragment {
                                 if (list != null && list.size() > 0) {
                                     List<String> stationList = new ArrayList<>();
                                     for (Route route : list) {
-                                        StringBuilder stringBuilder = new StringBuilder(route.name).
-                                                append("\t").append(route.time).
-                                                append("\t").append(route.other == null ? "" : route.other);
-                                        route.station.add(0,stringBuilder.toString());
+                                        String s = route.name +
+                                                "\t" + route.time +
+                                                "\t" + (route.other == null ? "" : route.other);
+                                        route.station.add(0, s);
                                         stationList.addAll(route.station);
                                     }
                                     adapter.bindDatas(stationList);
